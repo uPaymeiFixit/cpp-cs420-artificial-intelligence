@@ -4,17 +4,15 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class Genetic {
+  private final int MAX_GENERATIONS = 5000;
   public long cpu_time = 0;
   public int generations = 0;
   public final Node solution;
 
-
   public Genetic (Node[] initial_states, double mutation_probability) {
-
     long time = System.nanoTime() / 1000000;
     this.solution = this.search(initial_states, mutation_probability);
     this.cpu_time = System.nanoTime() / 1000000 - time;
-
   }
 
   // Begins the genetic algorithm search
@@ -24,9 +22,13 @@ public class Genetic {
 
   private Node geneticAlgorithm (Node[] population, double mutation_probability) {
     ArrayList<Node> new_population = new ArrayList<>(Arrays.asList(population));
-    while (true) {
+    Node best = new Node(population[0].board.length);
+    while (++this.generations < this.MAX_GENERATIONS) {
       ArrayList<Node> best_of_current_generation = this.randomSelection(new_population);
       for (Node node : best_of_current_generation) {
+        if (node.cost < best.cost) {
+          best = node;
+        }
         if (node.cost == 0) {
           return node;
         }
@@ -45,52 +47,9 @@ public class Genetic {
         }
         new_population.add(node);
       }
-      this.generations++;
     }
+    return best;
   }
-
-  // private Node geneticAlgorithm (Node[] population, double mutation_probability) {
-  //   Node[] new_population = new Node[population.length];
-  //   while (true) {
-  //     for (int i = 0; i < population.length; i++) {
-  //       if (population[i].cost == 0) {
-  //         return population[i];
-  //       }
-  //       Node x = this.randomSelection(population);
-  //       Node y = this.randomSelection(population);
-  //       Node child = this.reproduce(x, y)[0];
-  //       if ((new Random()).nextDouble() < mutation_probability) {
-  //         child = this.mutate(child);
-  //       }
-  //       new_population[i] = child;
-  //     }
-  //     population = new_population;
-  //     this.generations++;
-  //   }
-  // }
-
-  // // Randomly select a node, but favor fit nodes
-  // private Node randomSelection (Node[] population) {
-  //   int sum_cost = sumCost(population);
-  //   int random = (new Random()).nextInt(sum_cost);
-  //   int sum = 0;
-  //   for (int i = 0; i < population.length; i++) {
-  //     sum += population[i].cost;
-  //     if (sum >= random) {
-  //       return population[i];
-  //     }
-  //   }
-  //   return null;
-  // }
-
-  // // Sum of the costs of the population
-  // private int sumCost (Node[] population) {
-  //   int sum = 0;
-  //   for (Node node : population) {
-  //     sum += node.cost;
-  //   }
-  //   return sum;
-  // }
 
   // Change the position of one queen
   private Node mutate (Node node) {
