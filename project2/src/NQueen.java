@@ -7,17 +7,17 @@ import java.io.InputStream;
 public class NQueen {
   public static void main (String[] args) {
 
-    final int[] size = askSizeRange();
-    final int trials = askTrials();
+    final int[] size = new int[]{8,8};//askSizeRange();
+    final int trials = 25;//askTrials();
 
     for (int n = size[0]; n <= size[1]; n++) {
       Node[] population = new Node[trials];
       for (int i = 0; i < trials; i++) {
-        final int[] board = generateBoard(n);
-        population[i] = new Node(board);
+        population[i] = new Node(n);
       }
-      // Genetic genetic = new Genetic(population, 0.5);
-      RandomRestartHillClimbing rrhc = new RandomRestartHillClimbing(population);
+      Genetic genetic = new Genetic(population, 0.5);
+      System.out.println(Node.nodes_created);
+      // RandomRestartHillClimbing rrhc = new RandomRestartHillClimbing(n);
       // getSolution(board);
     }
 
@@ -151,16 +151,5 @@ public class NQueen {
   //   }
   //   System.out.println("└────┴────────┴────────┴────────┴────────┴────────┴────────┘");
   // }
-
-  // Returns an array of queen positions
-  private static int[] generateBoard (int n) {
-    int[] board = new int[n];
-    Random random = new Random();
-    for (int i = 0; i < n; i++) {
-      board[i] = random.nextInt(n);
-    }
-
-    return board;
-  }
 
 }
