@@ -6,11 +6,11 @@ import java.io.InputStream;
 
 public class NQueen {
 
-  private static final boolean DEBUG = true;
+  private static final boolean DEBUG = false;
 
   public static void main (String[] args) {
     if (DEBUG) {
-      printStats(2, 8, 3, 25, 0.5);
+      printStats(8, 8, 5, 25, 0.5);
     } else {
       final int[] size = askSizeRange();
       final int trials = askTrials();
@@ -32,9 +32,12 @@ public class NQueen {
       String right_space = leftPad((int)(35 - 2 * n + 1) / 2, ' ');
       System.out.println("│    │                                   │                                   │");
       // Print first three solutions side by side
-      for (int j = 0; j < 3; j++) {
-        String[] gen_lines = genetic[i][j].toString().split("\n");
+      for (int j = 0; j < genetic[i].length; j++) {
+        if (genetic[i][j] == null) {
+          break;
+        }
         String[] rrhc_lines = rrhc[i][j].toString().split("\n");
+        String[] gen_lines = genetic[i][j].toString().split("\n");
         for (int l = 0; l < n; l++) {
           // Print left bar + N
           if (j == 0 && l == 1) {
@@ -42,7 +45,7 @@ public class NQueen {
           } else {
             System.out.print("│    │");
           }
-          System.out.print(left_space + gen_lines[l] + right_space + '│' + left_space + rrhc_lines[l] + right_space + "│\n");
+          System.out.print(left_space + rrhc_lines[l] + right_space + '│' + left_space + gen_lines[l] + right_space + "│\n");
         }
         System.out.println("│    │                                   │                                   │");
       }
