@@ -1,7 +1,7 @@
 import java.util.Collections;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.PriorityQueue;
 
 public class Genetic {
   private final int MAX_GENERATIONS = 5000;
@@ -17,38 +17,32 @@ public class Genetic {
 
   // Begins the genetic algorithm search
   private Node search (Node[] initial_states, double mutation_probability) {
-    return this.geneticAlgorithm(initial_states, mutation_probability);
+    PriorityQueue<Node> population = new PriorityQueue<>(Arrays.asList(initial_states));
+    return this.geneticAlgorithm(population, mutation_probability);
   }
 
-  private Node geneticAlgorithm (Node[] population, double mutation_probability) {
-    ArrayList<Node> new_population = new ArrayList<>(Arrays.asList(population));
-    Node best = new Node(population[0].board.length);
-    while (++this.generations < this.MAX_GENERATIONS) {
-      ArrayList<Node> best_of_current_generation = this.randomSelection(new_population);
-      for (Node node : best_of_current_generation) {
-        if (node.cost < best.cost) {
-          best = node;
+  // Select, reproduce, and mutate genes
+  private Node geneticAlgorithm (PriorityQueue<Node> population, double mutation_probability) {
+    Random random = new Random();
+    do {
+      PriorityQueue<Node> new_population = new PriorityQueue<>();
+      for (int i = 1; i < population.size(); i++) {
+        Node x = population.poll();
+        Node y = population.peek();
+        Node[] child = this.reproduce(x, y);
+        if (random.nextDouble() < mutation_probability) {
+          child[0] = mutate(child[0]);
         }
-        if (node.cost == 0) {
-          return node;
+        if (random.nextDouble() < mutation_probability) {
+          child[1] = mutate(child[1]);
         }
-      }
-      ArrayList<Node> crossed_over = new ArrayList<>(population.length);
-      Node highest_fitness = best_of_current_generation.get(0);
-      for (int i = 0; i < best_of_current_generation.size(); i++) {
-        Node[] children = this.reproduce(highest_fitness, best_of_current_generation.get(i));
-        crossed_over.add(children[0]);
-        crossed_over.add(children[1]);
-      }
-      new_population.clear();
-      for (Node node : crossed_over) {
-        if ((new Random()).nextDouble() < mutation_probability) {
-          node = this.mutate(node);
-        }
-        new_population.add(node);
-      }
-    }
-    return best;
+        new_population.offer(child[0]);       
+        new_population.offer(child[1]);       
+      } 
+      population = new_population;
+    } while (++this.generations < this.MAX_GENERATIONS && population.peek().cost != 0);
+
+    return population.poll();
   }
 
   // Change the position of one queen
@@ -76,15 +70,6 @@ public class Genetic {
     Node y_node = new Node(y_board);
 
     return new Node[] {x_node, y_node};
-  }
-
-  private static ArrayList<Node> randomSelection (ArrayList<Node> pool) {
-    Collections.sort(pool);
-    ArrayList<Node> selection = new ArrayList<>();
-    for (int i = 0; i <= pool.size() >> 1; i++) {
-      selection.add(pool.get(i));
-    }
-    return selection;
   }
 
 }
