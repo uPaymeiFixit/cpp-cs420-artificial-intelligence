@@ -192,26 +192,26 @@ public class NQueen {
 
   private static int[] askSizeRange () {
     Scanner scanner = new Scanner(System.in);
-    int start = 0;
+    int start = 1;
     while (true) {
       System.out.print("Enter the smallest board size you want to solve:\n: ");
       while (!scanner.hasNextInt()) scanner.next();
       start = scanner.nextInt();
-      if (start > 0) {
+      if (start > 1) {
         break;
       }
-      System.out.println("Choose a number greater than 0!");
+      System.out.println("Choose a number greater than 1!");
     }
 
-    int end = 0;
+    int end = start;
     while (true) {
       System.out.print("Enter the largest board size you want to solve:\n: ");
       while (!scanner.hasNextInt()) scanner.next();
       end = scanner.nextInt();
-      if (end > 0) {
+      if (end > start) {
         break;
       }
-      System.out.println("Choose a number greater than 0!");
+      System.out.println("Choose a number greater than or equal to the start size!");
     }
 
     return new int[] {start, end};
