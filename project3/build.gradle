@@ -27,5 +27,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
+run {
+  standardInput = System.in
+}
+
 // Define the main class for the application
 mainClassName = 'tk.gibbs.mnk.Main'
