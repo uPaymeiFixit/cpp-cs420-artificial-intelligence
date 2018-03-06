@@ -25,8 +25,8 @@ public class BoardState {
 
   BoardState (TileState[][] board, int last_move_x, int last_move_y, int depth) {
     this.board = board;
-    this.last_move_x = 0;
-    this.last_move_y = 0;
+    this.last_move_x = last_move_x;
+    this.last_move_y = last_move_y;
     this.depth = depth;
     // TODO: calculate heuristicVal & hash
     this.heuristicVal = 0;
