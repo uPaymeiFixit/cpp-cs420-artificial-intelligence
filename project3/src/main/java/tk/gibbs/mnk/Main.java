@@ -11,19 +11,24 @@ public class Main {
     double max_time = 30.0;//askMaxTime();
     boolean first_play = true;//askFirstPlayer();
 
-    BoardState board;
-    if (first_play) {
-      board = (new BoardState()).copyBoardWithMove(TileState.X, 4, 4);
-      System.out.println("Player's move is: e5");
-    } else {
-      board = new BoardState();
-    }
-    System.out.println(board);
-
+    BoardState state = new BoardState();
+    System.out.println(state); // Print blank board
+    
     AI ai = new AI(max_time);
-    BoardState react = askMove(board);
-    System.out.println("\n" + react);
-    ai.move(react);
+
+    if (first_play) {
+      state = state.copyBoardWithMove(TileState.X, 4, 4);
+      System.out.println(state);
+    }
+
+    while (true) {
+      state = askMove(state);
+      System.out.println(state);
+      System.out.println("Thinking...");
+      state = ai.move(state);
+      System.out.println(state);
+    }
+    
   }
 
   public static BoardState askMove (BoardState board) {
