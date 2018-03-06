@@ -19,7 +19,7 @@ public class Main {
       board = new BoardState();
     }
     System.out.println(board);
-    
+
     AI ai = new AI(max_time);
     BoardState react = askMove(board);
     System.out.println("\n" + react);
@@ -39,15 +39,12 @@ public class Main {
     }
     int x = Character.toLowerCase(input.charAt(1)) - '1';
     int y = Character.toLowerCase(input.charAt(0)) - 'a';
-    if (y < 0 || y > 7) {
-      System.out.println("Invalid input: First charater of move must be in the range [A, H]");
+    try {
+      return board.copyBoardWithMove(TileState.O, y, x);
+    } catch (Error error) {
+      System.out.println(error.getMessage());
       return askMove(board);
     }
-    if (x < 0 || x > 7) {
-      System.out.println("Invalid input: First charater of move must be in the range [1, 8]");
-      return askMove(board);
-    }
-    return board.copyBoardWithMove(TileState.O, y, x);
   }
 
 

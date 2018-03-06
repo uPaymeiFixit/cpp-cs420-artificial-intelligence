@@ -44,12 +44,13 @@ public class BoardState {
   }
 
   BoardState copyBoardWithMove (TileState player, int col, int row) {
-    assert player != TileState.EMPTY;
-    // } else if (col < 0 || col >= board.length) {
-    //   throw new Error(String.format("col %s is outside of board", col));
-    // } else if (row < 0 || row >= board[col].length) {
-    //   throw new Error(String.format("row %s is outside of board", row));
-    // }
+    if (player == TileState.EMPTY) {
+      throw new Error("TileState.EMPTY is not a valid player");
+    } else if (col < 0 || col >= board.length) {
+      throw new Error(String.format("col %s is outside of board", col));
+    } else if (row < 0 || row >= board[col].length) {
+      throw new Error(String.format("row %s is outside of board", row));
+    }
 
     TileState[][] updatedBoard = new TileState[this.board.length][];
     for (int i = 0; i < this.board.length; i++) {
