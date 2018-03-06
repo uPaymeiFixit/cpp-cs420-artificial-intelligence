@@ -19,7 +19,7 @@ public class BoardState {
     // TODO: calculate heuristicVal & hash
   }
 
-  BoardState copyWithMove (TileState player, int col, int row) {
+  BoardState copyBoardWithMove (TileState player, int col, int row) {
     if (player == TileState.EMPTY) {
       throw new Error("TileState.EMPTY is not a valid player");
     } else if (col < 0 || col >= board.length) {

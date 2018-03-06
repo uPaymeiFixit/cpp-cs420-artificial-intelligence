@@ -8,11 +8,11 @@ public class Main {
     System.out.println("Hello, World");
     BoardState board = new BoardState();
     System.out.println(board.toString());
-    BoardState newBoard = board.copyWithMove(TileState.X, 4, 4);
+    BoardState newBoard = board.copyBoardWithMove(TileState.X, 4, 4);
     System.out.println(board != newBoard);
     System.out.println(newBoard.toString());
     System.out.println(board.toString());
-    System.out.println(newBoard.copyWithMove(TileState.O, 3, 3).toString());
+    System.out.println(newBoard.copyBoardWithMove(TileState.O, 3, 3).toString());
   }
 
   public static void menu () {
