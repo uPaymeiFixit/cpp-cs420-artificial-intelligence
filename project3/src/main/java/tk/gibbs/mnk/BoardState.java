@@ -43,7 +43,7 @@ public class BoardState {
 
     // print column headers
     for (int i = 0; i < board[0].length; i++) {
-      out += (i + 1) + " ";
+      out += i + " ";
     }
     out += "\n";
 
@@ -54,10 +54,10 @@ public class BoardState {
       for (int n = 0; n < board[i].length; n++) {
         switch (board[i][n]) {
           case X:
-            out += "X ";
+            out += "✕ ";
             break;
           case O:
-            out += "O ";
+            out += "◯ ";
             break;
           case EMPTY:
             out += "∙ ";

@@ -6,7 +6,12 @@ public class Main {
   public static void main (String[] args) {
     menu();
     System.out.println("Hello, World");
-    System.out.println(new BoardState().toString());
+    BoardState board = new BoardState();
+    System.out.println(board.toString());
+    BoardState newBoard = board.copyWithMove(TileState.X, 4, 4);
+    System.out.println(board != newBoard);
+    System.out.println(newBoard.toString());
+    System.out.println(newBoard.copyWithMove(TileState.O, 3, 3).toString());
   }
 
   public static void menu () {
