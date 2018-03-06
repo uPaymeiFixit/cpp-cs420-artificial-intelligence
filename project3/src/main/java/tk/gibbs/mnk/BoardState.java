@@ -4,6 +4,8 @@ public class BoardState {
   public TileState[][] board = new TileState[8][8];
   public String hash;
   public int heuristicVal;
+  public int last_move_x;
+  public int last_move_y;
 
   BoardState () {
     // Initilaize empty board
@@ -35,7 +37,10 @@ public class BoardState {
 
     updatedBoard[col][row] = player;
 
-    return new BoardState(updatedBoard);
+    BoardState new_board = new BoardState(updatedBoard);
+    new_board.last_move_x = col;
+    new_board.last_move_y = row;
+    return new_board;
   }
 
   @Override

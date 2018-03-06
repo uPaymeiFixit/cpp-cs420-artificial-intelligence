@@ -14,13 +14,16 @@ public class Main {
     BoardState board;
     if (first_play) {
       board = (new BoardState()).copyBoardWithMove(TileState.X, 4, 4);
+      System.out.println("Player's move is: e5");
     } else {
       board = new BoardState();
     }
     System.out.println(board);
-    System.out.println("Player's move is: e5");
-    System.out.println("\n" + askMove(board));
-
+    
+    AI ai = new AI(max_time);
+    BoardState react = askMove(board);
+    System.out.println("\n" + react);
+    ai.move(react);
   }
 
   public static BoardState askMove (BoardState board) {
