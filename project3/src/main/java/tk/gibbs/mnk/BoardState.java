@@ -43,24 +43,24 @@ public class BoardState {
 
     // print column headers
     for (int i = 0; i < board[0].length; i++) {
-      out += i + " ";
+      out += ANSIColors.BLUE + i + ANSIColors.RESET + " ";
     }
     out += "\n";
 
     for (int i = 0; i < board.length; i++) {
       // print row leader
-      out += (char)(65 + i) + " ";
+      out += ANSIColors.PURPLE + (char)(65 + i) + ANSIColors.RESET + " ";
 
       for (int n = 0; n < board[i].length; n++) {
         switch (board[i][n]) {
           case X:
-            out += "✕ ";
+            out += String.format("%s✕%s ", ANSIColors.RED, ANSIColors.RESET);
             break;
           case O:
-            out += "◯ ";
+            out += String.format("%s◯%s ", ANSIColors.GREEN, ANSIColors.RESET);
             break;
           case EMPTY:
-            out += "∙ ";
+            out += String.format("%s∙%s ", ANSIColors.BLACK_BRIGHT, ANSIColors.RESET);
             break;
         }
       }
@@ -70,4 +70,3 @@ public class BoardState {
     return out;
   }
 }
-
