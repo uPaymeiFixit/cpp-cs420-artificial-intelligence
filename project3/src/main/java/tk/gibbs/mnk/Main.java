@@ -16,22 +16,36 @@ public class Main {
 
   public static void menu () {
     double max_time = askMaxTime();
+    boolean first_play = askFirstPlayer();
     System.out.println(max_time);
+    System.out.println(first_play);
   }
 
   public static double askMaxTime () {
     Scanner scanner = new Scanner(System.in);
-    System.out.println("Enter maximum turn time in seconds\n: ");
+    System.out.print("Enter maximum turn time in seconds\n: ");
     while (!scanner.hasNextDouble()) {
       scanner.next();
     }
     double max_time = scanner.nextDouble();
     if (max_time <= 0) {
       System.out.println("Invalid input: Time in seconds must be greater than 0.");
-      scanner.close();
       return askMaxTime();
     }
-    scanner.close();
     return max_time;
+  }
+
+  public static boolean askFirstPlayer () {
+    Scanner scanner = new Scanner(System.in);
+    System.out.println("Are we making the first move? (y/n)\n: ");
+    while (!scanner.hasNextLine()) {
+      scanner.next();
+    }
+    char input = Character.toLowerCase(scanner.nextLine().charAt(0));
+    if (input == 'y' || input == 'n') {
+      return input == 'y';
+    }
+    System.out.println("Invalid input: Please enter 'yes' or 'no'");
+    return askFirstPlayer();
   }
 }
