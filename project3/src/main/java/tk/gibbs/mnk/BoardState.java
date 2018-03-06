@@ -3,7 +3,7 @@ package tk.gibbs.mnk;
 public class BoardState {
   public TileState[][] board = new TileState[8][8];
   public String hash;
-  public int score;
+  public int heuristicVal;
 
   BoardState () {
     // Initilaize empty board
@@ -16,6 +16,7 @@ public class BoardState {
 
   BoardState (TileState[][] board) {
     this.board = board;
+    // TODO: calculate heuristicVal & hash
   }
 
   BoardState copyWithMove (TileState player, int col, int row) {

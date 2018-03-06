@@ -11,6 +11,7 @@ public class Main {
     BoardState newBoard = board.copyWithMove(TileState.X, 4, 4);
     System.out.println(board != newBoard);
     System.out.println(newBoard.toString());
+    System.out.println(board.toString());
     System.out.println(newBoard.copyWithMove(TileState.O, 3, 3).toString());
   }
 
