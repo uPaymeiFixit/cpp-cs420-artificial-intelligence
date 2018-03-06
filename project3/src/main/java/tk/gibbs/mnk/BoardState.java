@@ -4,6 +4,7 @@ public class BoardState {
   final public TileState[][] board;
   final public String hash;
   final public int heuristicVal;
+  final TileState last_player;
   final public int last_move_x;
   final public int last_move_y;
   final public int depth;
@@ -20,11 +21,14 @@ public class BoardState {
   }
 
   BoardState (TileState[][] board) {
-    this(board, 0, 0, 0);
+    this(board, TileState.X, 0, 0, 0);
   }
 
-  BoardState (TileState[][] board, int last_move_x, int last_move_y, int depth) {
+  BoardState (
+    TileState[][] board, TileState last_player, int last_move_x, int last_move_y, int depth
+  ) {
     this.board = board;
+    this.last_player = last_player;
     this.last_move_x = last_move_x;
     this.last_move_y = last_move_y;
     this.depth = depth;
@@ -59,7 +63,7 @@ public class BoardState {
 
     updatedBoard[col][row] = player;
 
-    return new BoardState(updatedBoard, col, row, this.depth + 1);
+    return new BoardState(updatedBoard, player, col, row, this.depth + 1);
   }
 
   @Override
