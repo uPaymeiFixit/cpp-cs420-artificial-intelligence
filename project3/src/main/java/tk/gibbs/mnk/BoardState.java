@@ -6,6 +6,7 @@ public class BoardState {
   public int heuristicVal;
   public int last_move_x;
   public int last_move_y;
+  public int depth = 0;
 
   BoardState () {
     // Initilaize empty board
@@ -40,6 +41,7 @@ public class BoardState {
     BoardState new_board = new BoardState(updatedBoard);
     new_board.last_move_x = col;
     new_board.last_move_y = row;
+    new_board.depth = this.depth + 1;
     return new_board;
   }
 

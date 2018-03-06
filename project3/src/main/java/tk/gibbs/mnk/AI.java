@@ -5,29 +5,37 @@ import java.util.ArrayList;
 public class AI {
 
   private final double MAX_TIME;
+  private long start_time;
+  private BoardState highest;
 
   public AI (double max_time) {
     this.MAX_TIME = max_time;
   }
 
   public BoardState move (BoardState state) {
-    long start_time = System.nanoTime();
+    
+    
+    // for (BoardState s : successors(state)) {
+    //   out(s.toString());
+    // }
+    // return state;
 
+
+
+    start_time = System.nanoTime();
+    out("Starting alphaBetaSearch\n");
     BoardState next_state = alphaBetaSearch(state);
     System.out.println(next_state);
     return next_state;
 
 
-    // if (System.nanoTime() - start_time >= MAX_TIME) {
-    //   return state; // TODO pick the best one
-    // }
   }
-
   private BoardState alphaBetaSearch (BoardState state) {
+    out("Starting maxValue\n");
     int v = maxValue(state, Integer.MIN_VALUE, Integer.MAX_VALUE);
-    System.out.println("maxValue returned v = " + v);
-    return new BoardState();
+    out("maxValue returned " + v + "\n");
     // "return the action in successors(state) with value v"
+    return this.highest;
   }
 
   private int maxValue (BoardState state, int alpha, int beta) {
@@ -35,13 +43,17 @@ public class AI {
       return utility(state);
     }
     int v = Integer.MIN_VALUE;
+    BoardState w = state;
     for (BoardState s : successors(state)) {
+      w = s;
       v = max(v, minValue(s, alpha, beta));
       if (v >= beta) {
+        this.highest = w;
         return v;
       }
       alpha = max(alpha, v);
     }
+    this.highest = w;
     return v;
   }
 
@@ -68,20 +80,39 @@ public class AI {
     return a > b ? b : a;
   }
 
+  // Generate array of all possible next moves
   private BoardState[] successors (BoardState state) {
+    TileState next_player = state.board[state.last_move_x][state.last_move_y];
+    next_player = next_player == TileState.X ? TileState.O : TileState.X;
+
     ArrayList<BoardState> states = new ArrayList<BoardState>(64);
     for (int i = 0; i < state.board.length; i++) {
       for (int j = 0; j < state.board[i].length; j++) {
         if (state.board[i][j] == TileState.EMPTY) {
-          states.add(state.copyBoardWithMove(TileState.O, i, j));
+          states.add(state.copyBoardWithMove(next_player, i, j));
         }
       }
     }
     return states.toArray(new BoardState[states.size()]);
   }
 
+  // Return whether or not we've run out of time or passed 4 layers
+  private boolean cutoffTest (BoardState state) {
+    // if (System.nanoTime() - this.start_time >= 30E10) {
+    //   return true;
+    // } 
+    if (state.depth > 4) {
+      return true;
+    }
+    return false;
+  }
   
+  // Return whether or not this is a winning board (or cutoff point is reached)
   private boolean terminalTest (BoardState state) {
+    if (cutoffTest(state)) {
+      return true;
+    }
+
     TileState[][] board = state.board;
     int x = state.last_move_x;
     int y = state.last_move_y;
@@ -122,8 +153,8 @@ public class AI {
     return false;
   }
 
+  // Temporary heuristic: Count how many 2 in a row / column there are
   private int utility (BoardState state) {
-    // Count how many 2 in a row
     int score = 0;
     for (int i = 1; i < state.board.length; i++) {
       for (int j = 1; j < state.board[i].length; j++) {
@@ -134,5 +165,10 @@ public class AI {
       }
     }
     return score;
+  }
+
+  // TEMPORARY DEBUG
+  public static void out (String string) {
+    System.out.print(ANSIColors.RED_BACKGROUND + string.replace("\n", "\t\n"));
   }
 }
