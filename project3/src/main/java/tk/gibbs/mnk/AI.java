@@ -12,26 +12,15 @@ public class AI {
     this.MAX_TIME = max_time;
   }
 
+  // Return the best move given the state
   public BoardState move (BoardState state) {
-    
-    
-    // for (BoardState s : successors(state)) {
-    //   out(s.toString());
-    // }
-    // return state;
-
-
-
     start_time = System.nanoTime();
-    out("Starting alphaBetaSearch\n");
+    
     BoardState next_state = alphaBetaSearch(state);
-    System.out.println(next_state);
     return next_state;
-
-
   }
+
   private BoardState alphaBetaSearch (BoardState state) {
-    out("Starting maxValue\n");
     int v = maxValue(state, Integer.MIN_VALUE, Integer.MAX_VALUE);
     out("maxValue returned " + v + "\n");
     // "return the action in successors(state) with value v"
@@ -81,7 +70,7 @@ public class AI {
   }
 
   // Generate array of all possible next moves
-  private BoardState[] successors (BoardState state) {
+  private BoardState[] successors_exhaustive (BoardState state) {
     TileState next_player = state.board[state.last_move_x][state.last_move_y];
     next_player = next_player == TileState.X ? TileState.O : TileState.X;
 
@@ -96,14 +85,53 @@ public class AI {
     return states.toArray(new BoardState[states.size()]);
   }
 
+  private BoardState[] successors (BoardState state) {
+    TileState next_player = state.board[state.last_move_x][state.last_move_y];
+    next_player = next_player == TileState.X ? TileState.O : TileState.X;
+
+    ArrayList<BoardState> states = new ArrayList<BoardState>(64);
+    TileState[][] board = state.board;
+    for (int i = 0; i < board.length; i++) {
+      for (int j = 0; j < board[i].length; j++) {
+        if (board[i][j] != TileState.EMPTY) {
+          // Look left
+          if (i != 0) {
+            if (board[i - 1][j] == TileState.EMPTY) {
+              states.add(state.copyBoardWithMove(next_player, i - 1, j));
+            }
+          }
+          // Look right
+          if (i != 7) {
+            if (board[i + 1][j] == TileState.EMPTY) {
+              states.add(state.copyBoardWithMove(next_player, i + 1, j));
+            }
+          }
+          // Look up
+          if (j != 0) {
+            if (board[i][j - 1] == TileState.EMPTY) {
+              states.add(state.copyBoardWithMove(next_player, i, j - 1));
+            }
+          }
+          // Look down
+          if (j != 7) {
+            if (board[i][j + 1] == TileState.EMPTY) {
+              states.add(state.copyBoardWithMove(next_player, i, j + 1));
+            }
+          }
+        }
+      }
+    }
+    return states.toArray(new BoardState[states.size()]);
+  }
+
   // Return whether or not we've run out of time or passed 4 layers
   private boolean cutoffTest (BoardState state) {
-    // if (System.nanoTime() - this.start_time >= 30E10) {
-    //   return true;
-    // } 
-    if (state.depth > 4) {
+    if (System.nanoTime() - this.start_time >= 30E10) {
       return true;
-    }
+    } 
+    // if (state.depth > 4) {
+    //   return true;
+    // }
     return false;
   }
   
