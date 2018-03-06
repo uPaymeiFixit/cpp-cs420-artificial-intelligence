@@ -5,22 +5,48 @@ import java.util.Scanner;
 public class Main {
   public static void main (String[] args) {
     menu();
-    System.out.println("Hello, World");
-    BoardState board = new BoardState();
-    System.out.println(board.toString());
-    BoardState newBoard = board.copyBoardWithMove(TileState.X, 4, 4);
-    System.out.println(board != newBoard);
-    System.out.println(newBoard.toString());
-    System.out.println(board.toString());
-    System.out.println(newBoard.copyBoardWithMove(TileState.O, 3, 3).toString());
   }
 
   public static void menu () {
-    double max_time = askMaxTime();
-    boolean first_play = askFirstPlayer();
-    System.out.println(max_time);
-    System.out.println(first_play);
+    double max_time = 30.0;//askMaxTime();
+    boolean first_play = true;//askFirstPlayer();
+
+    BoardState board;
+    if (first_play) {
+      board = (new BoardState()).copyBoardWithMove(TileState.X, 4, 4);
+    } else {
+      board = new BoardState();
+    }
+    System.out.println(board);
+    System.out.println("Player's move is: e5");
+    System.out.println("\n" + askMove(board));
+
   }
+
+  public static BoardState askMove (BoardState board) {
+    Scanner scanner = new Scanner(System.in);
+    System.out.print("Choose player's next move:\n: ");
+    while (!scanner.hasNextLine()) {
+      scanner.next();
+    }
+    String input = scanner.nextLine();
+    if (input.length() < 2 || input.length() > 2) {
+      System.out.println("Invalid input: Move must be only two characters.");
+      return askMove(board);
+    }
+    int x = Character.toLowerCase(input.charAt(1)) - '1';
+    int y = Character.toLowerCase(input.charAt(0)) - 'a';
+    if (y < 0 || y > 7) {
+      System.out.println("Invalid input: First charater of move must be in the range [A, H]");
+      return askMove(board);
+    }
+    if (x < 0 || x > 7) {
+      System.out.println("Invalid input: First charater of move must be in the range [1, 8]");
+      return askMove(board);
+    }
+    return board.copyBoardWithMove(TileState.O, y, x);
+  }
+
 
   public static double askMaxTime () {
     Scanner scanner = new Scanner(System.in);

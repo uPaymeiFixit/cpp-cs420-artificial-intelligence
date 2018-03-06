@@ -43,7 +43,7 @@ public class BoardState {
     String out = "  ";
 
     // print column headers
-    for (int i = 0; i < board[0].length; i++) {
+    for (int i = 1; i <= board[0].length; i++) {
       out += ANSIColors.BLUE + i + ANSIColors.RESET + " ";
     }
     out += "\n";
