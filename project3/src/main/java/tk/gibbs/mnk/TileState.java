@@ -1,4 +1,4 @@
-package tk.gibbs.mkn;
+package tk.gibbs.mnk;
 
 public enum TileState {
   EMPTY,

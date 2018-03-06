@@ -1,4 +1,4 @@
-package tk.gibbs.mkn;
+package tk.gibbs.mnk;
 
 public class BoardState {
   public TileState[][] board = new TileState[8][8];

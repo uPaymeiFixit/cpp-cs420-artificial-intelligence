@@ -28,4 +28,4 @@ dependencies {
 }
 
 // Define the main class for the application
-mainClassName = 'tk.gibbs.mkn.Main'
+mainClassName = 'tk.gibbs.mnk.Main'

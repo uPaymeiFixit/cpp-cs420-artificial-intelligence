@@ -31,7 +31,7 @@
       "cwd": "${workspaceFolder}",
       "console": "internalConsole",
       "stopOnEntry": false,
-      "mainClass": "tk.gibbs.mkn.Main",
+      "mainClass": "tk.gibbs.mnk.Main",
       "projectName": "project3",
       "args": ""
     },

@@ -1,4 +1,4 @@
-package tk.gibbs.mkn;
+package tk.gibbs.mnk;
 
 import java.util.Scanner;
 
