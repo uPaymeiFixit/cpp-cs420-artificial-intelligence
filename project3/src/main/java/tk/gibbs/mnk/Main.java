@@ -141,6 +141,13 @@ public class Main {
     }
     int x = Character.toLowerCase(input.charAt(1)) - '1';
     int y = Character.toLowerCase(input.charAt(0)) - 'a';
+    
+    // If the user did it backwards, forgive them
+    if (input.charAt(0) > '0' && input.charAt(0) < '9') {
+      x = Character.toLowerCase(input.charAt(0)) - '1';
+      y = Character.toLowerCase(input.charAt(1)) - 'a';
+    }
+
     try {
       return board.copyBoardWithMove(TileState.O, y, x);
     } catch (Error error) {
