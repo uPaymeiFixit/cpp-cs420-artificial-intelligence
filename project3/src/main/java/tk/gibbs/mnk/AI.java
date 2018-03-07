@@ -101,7 +101,7 @@ public class AI {
   }
 
   private BoardState alphaBetaSearch (BoardState state) {
-    successors(state);
+    successors_exhaustive(state);
     return state.children.poll();    
     // int v = maxValue(state, Integer.MIN_VALUE, Integer.MAX_VALUE);
     // out("maxValue returned " + v + "\n");

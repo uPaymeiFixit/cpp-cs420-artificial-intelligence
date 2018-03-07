@@ -9,10 +9,10 @@ public class Main {
   private static boolean first_play;
 
   public static void main (String[] args) {
-    int a = 1;
-    a = a<<0x4f;
-    System.out.println(a);
-    // menu();
+    // int a = 1;
+    // a = a<<0x4f;
+    // System.out.println(a);
+    menu();
   }
 
   public static void menu () {
