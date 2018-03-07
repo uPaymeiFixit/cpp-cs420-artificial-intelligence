@@ -81,7 +81,7 @@ public class AI {
 
       ArrayList<Pattern> rotatedPatterns = new ArrayList<>();
       for (Pattern pattern : unrotatedPatterns) {
-        System.out.println(pattern);
+        // System.out.println(pattern);
         rotatedPatterns.add(pattern);
         rotatedPatterns.add(new Pattern(pattern.rotate(), pattern.value));
         rotatedPatterns.add(new Pattern(pattern.rotate(2), pattern.value));

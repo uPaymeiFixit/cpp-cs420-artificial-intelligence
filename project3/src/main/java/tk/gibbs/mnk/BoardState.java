@@ -204,21 +204,21 @@ public class BoardState implements Comparable<BoardState> {
           }
         }
         if (match) {
-          System.out.println("Matched pattern:");
-          System.out.println(this);
-          System.out.println(pattern);
+          // System.out.println("Matched pattern:");
+          // System.out.println(this);
+          // System.out.println(pattern);
           foundPatterns.add(pattern);
         }
       }
     }
 
-    int score = 0;
-    for (Pattern p : foundPatterns) {
-      score += p.value;
-    }
-    if (score > 0) {
-      System.out.println(String.format("Score: %s", score));
-    }
+    // int score = 0;
+    // for (Pattern p : foundPatterns) {
+    //   score += p.value;
+    // }
+    // if (score > 0) {
+    //   System.out.println(String.format("Score: %s", score));
+    // }
 
     return foundPatterns.toArray(new Pattern[0]);
   }
