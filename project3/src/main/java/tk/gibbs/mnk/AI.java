@@ -127,13 +127,13 @@ public class AI {
   private boolean cutoffTest (BoardState state) {
     if (System.nanoTime() - start_time >= this.MAX_TIME) {
       return true;
-    } 
+    }
     // if (state.depth > 4) {
     //   return true;
     // }
     return false;
   }
-  
+
   // Return whether or not this is a winning board (or cutoff point is reached)
   private boolean terminalTest (BoardState state) {
     return cutoffTest(state) || state.terminal_state;
