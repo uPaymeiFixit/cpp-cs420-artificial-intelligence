@@ -1,4 +1,4 @@
-# CS 420 Project 1
+# CS 420 Project 3
 
 ## Instructions
 ### Compile
