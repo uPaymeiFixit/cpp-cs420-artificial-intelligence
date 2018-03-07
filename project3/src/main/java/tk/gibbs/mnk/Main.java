@@ -9,7 +9,10 @@ public class Main {
   private static boolean first_play;
 
   public static void main (String[] args) {
-    menu();
+    int a = 1;
+    a = a<<0x4f;
+    System.out.println(a);
+    // menu();
   }
 
   public static void menu () {
@@ -32,7 +35,7 @@ public class Main {
       }
       System.out.print('\n' + ANSIColors.WHITE + "Thinking...");
       state = ai.move(state);
-      System.out.println("Done(" + (System.nanoTime() - AI.start_time) / 1E9 + " seconds)" + ANSIColors.RESET);
+      System.out.println("Done (" + (System.nanoTime() - AI.start_time) / 1E9 + " seconds)" + ANSIColors.RESET);
       printMove(state);
     }
     

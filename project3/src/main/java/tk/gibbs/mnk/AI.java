@@ -101,12 +101,12 @@ public class AI {
   }
 
   private BoardState alphaBetaSearch (BoardState state) {
-    int v = maxValue(state, Integer.MIN_VALUE, Integer.MAX_VALUE);
-    // out(state.children.peek().toString());
+    successors(state);
+    return state.children.poll();    
+    // int v = maxValue(state, Integer.MIN_VALUE, Integer.MAX_VALUE);
     // out("maxValue returned " + v + "\n");
     // "return the action in successors(state) with value v"
-    // return state.children.poll();    
-    return this.highest;
+    // return this.highest;
   }
 
   private int maxValue (BoardState state, int alpha, int beta) {
