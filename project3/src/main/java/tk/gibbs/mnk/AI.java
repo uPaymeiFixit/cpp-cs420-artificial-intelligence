@@ -63,6 +63,10 @@ public class AI {
 
   public AI (double max_time) {
     this.MAX_TIME = max_time;
+
+    for (Pattern pattern : patterns) {
+      System.out.println(pattern);
+    }
   }
 
   // Return the best move given the state
