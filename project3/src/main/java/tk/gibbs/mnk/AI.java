@@ -144,8 +144,8 @@ public class AI {
   }
 
   private BoardState nPlieSearch (BoardState state) {
-    int n = 1;
-    double weight = 0.5;
+    int n = 2;
+    double weight = 0.8;
     successors_exhaustive(state);
     double best_heuristic = Double.MIN_VALUE;
     BoardState best_board = state.children.peek();
@@ -164,7 +164,7 @@ public class AI {
     successors_exhaustive(state);
     double sum = 0;
     for (BoardState s : state.children) {
-      barChart(s.depth);
+      // barChart(s.depth);
       if (n == 0) {
         sum += s.heuristic_value;
       } else {
@@ -306,24 +306,26 @@ public class AI {
   private static int last_seen_number = -1;
   private static int count = 0;
   // PRINTS A HORIZONTAL REPRESENTATION OF THE NUMBER. MAX IS 64
-  private void barChart (int value) {
+  public static void barChart (int value) {
     // Constraints on n
     value = value > 64 ? 64 : value;
 
     if (value == last_seen_number) {
-      if (count == 2) {
-        String text = " " + value + " SUPPRESSING ";
-        System.out.println(ANSIColors.CYAN_BACKGROUND_BRIGHT + text + ANSIColors.PURPLE_BACKGROUND_BRIGHT + leftPad(value - text.length()) + ANSIColors.RESET);
-      }
+      // if (count == 2) {
+      //   String text = " " + value + " SUPPRESSING ";
+      //   System.out.println(ANSIColors.CYAN_BACKGROUND_BRIGHT + text + ANSIColors.PURPLE_BACKGROUND_BRIGHT + leftPad(value - text.length()) + ANSIColors.RESET);
+      // }
       count++;
     } else if (count != 0) {
       // We've just switched to a new number, so alert the user how many times that number was missed
-      String text = " " + last_seen_number + " REPEATED " + count + " TIMES ";
-      System.out.println(ANSIColors.CYAN_BACKGROUND_BRIGHT + text + ANSIColors.PURPLE_BACKGROUND_BRIGHT + leftPad(value - text.length()) + ANSIColors.RESET);
+      String text = " " + last_seen_number + ANSIColors.BLACK_BACKGROUND + ANSIColors.WHITE_BOLD + " x" + count;
+      System.out.println(text + ANSIColors.PURPLE_BACKGROUND_BRIGHT + leftPad(value - text.length()) + ANSIColors.RESET);
+      text = " " + value + " ";
+      System.out.println(ANSIColors.CYAN_BACKGROUND + ANSIColors.WHITE_BOLD + text + ANSIColors.RED_BACKGROUND_BRIGHT + leftPad(value - text.length()) + ANSIColors.RESET);
       count = 0;
     } else {
       String text = " " + value + " ";
-      System.out.println(ANSIColors.CYAN_BACKGROUND_BRIGHT + text + ANSIColors.RED_BACKGROUND_BRIGHT + leftPad(value - text.length()) + ANSIColors.RESET);
+      System.out.println(ANSIColors.CYAN_BACKGROUND + ANSIColors.WHITE_BOLD + text + ANSIColors.RED_BACKGROUND_BRIGHT + leftPad(value - text.length()) + ANSIColors.RESET);
     }
     last_seen_number = value;
   }

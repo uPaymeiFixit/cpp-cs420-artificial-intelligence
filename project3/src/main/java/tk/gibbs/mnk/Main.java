@@ -11,24 +11,40 @@ public class Main {
   public static void main (String[] args) {
     menu();
 
-    new AI(10 * 1E9 - 3E6, first_play);
+    // AI.barChart(10);
+    // AI.barChart(11);
+    // AI.barChart(12);
+    // AI.barChart(13);
+    // AI.barChart(10);
+    // AI.barChart(10);
+    // AI.barChart(10);
+    // AI.barChart(10);
+    // AI.barChart(10);
+    // AI.barChart(5);
+    // AI.barChart(6);
+    // AI.barChart(7);
+    // AI.barChart(8);
+    
+    
 
-    TileState X = TileState.X;
-    TileState O = TileState.O;
-    TileState i = TileState.EMPTY;
-    TileState[][] board = new TileState[][] {
-      {i, i, i, i, i, i, i, i},
-      {i, i, i, i, i, i, i, i},
-      {i, i, i, i, i, i, i, i},
-      {i, i, i, i, i, i, i, i},
-      {i, i, i, i, i, i, i, i},
-      {i, i, i, i, i, i, i, i},
-      {i, i, i, i, i, i, i, i},
-      {i, i, i, i, i, i, i, i}
-    };
+    // new AI(10 * 1E9 - 3E6, first_play);
 
-    BoardState state = new BoardState(board, X, 3, 3, 5, "");
-    AI.outl(state.heuristic_value + "");
+    // TileState X = TileState.X;
+    // TileState O = TileState.O;
+    // TileState i = TileState.EMPTY;
+    // TileState[][] board = new TileState[][] {
+    //   {i, i, i, i, i, i, i, i},
+    //   {i, i, i, i, i, i, i, i},
+    //   {i, i, i, i, i, i, i, i},
+    //   {i, i, i, i, i, i, i, i},
+    //   {i, i, i, i, i, i, i, i},
+    //   {i, i, i, i, i, i, i, i},
+    //   {i, i, i, i, i, i, i, i},
+    //   {i, i, i, i, i, i, i, i}
+    // };
+
+    // BoardState state = new BoardState(board, X, 3, 3, 5, "");
+    // AI.outl(state.heuristic_value + "");
 
   }
 
@@ -45,7 +61,6 @@ public class Main {
     }
 
     while (!state.terminal_state && state.depth != 64) {
-      AI.outl(BoardState.visited_states.size() + "");
       state = askMove(state);
       printMove(state);
       if (state.terminal_state || state.depth == 64) {
