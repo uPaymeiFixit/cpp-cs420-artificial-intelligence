@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class AI {
 
   private final double MAX_TIME;
-  private long start_time;
+  public static long start_time;
   private BoardState highest;
 
   public AI (double max_time) {
@@ -15,14 +15,13 @@ public class AI {
   // Return the best move given the state
   public BoardState move (BoardState state) {
     start_time = System.nanoTime();
-    
     BoardState next_state = alphaBetaSearch(state);
     return next_state;
   }
 
   private BoardState alphaBetaSearch (BoardState state) {
     int v = maxValue(state, Integer.MIN_VALUE, Integer.MAX_VALUE);
-    out("maxValue returned " + v + "\n");
+    // out("maxValue returned " + v + "\n");
     // "return the action in successors(state) with value v"
     return this.highest;
   }
@@ -126,7 +125,8 @@ public class AI {
 
   // Return whether or not we've run out of time or passed 4 layers
   private boolean cutoffTest (BoardState state) {
-    if (System.nanoTime() - this.start_time >= 30E10) {
+    if (System.nanoTime() - this.start_time >= this.MAX_TIME) {
+      // System.out.println("out of time!");
       return true;
     } 
     // if (state.depth > 4) {
@@ -197,6 +197,10 @@ public class AI {
 
   // TEMPORARY DEBUG
   public static void out (String string) {
-    System.out.print(ANSIColors.RED_BACKGROUND + string.replace("\n", "\t\n"));
+    System.out.print(ANSIColors.RED_BACKGROUND + string.replace("\n", "\n\t") + ANSIColors.RESET);
+  }
+  // TEMPORARY DEBUG
+  public static void outl (String string) {
+    System.out.print(ANSIColors.RED_BACKGROUND + string.replace("\n", "\n\t") + ANSIColors.RESET + "\n");
   }
 }
