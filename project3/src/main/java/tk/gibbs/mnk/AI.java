@@ -125,7 +125,7 @@ public class AI {
 
   // Return whether or not we've run out of time or passed 4 layers
   private boolean cutoffTest (BoardState state) {
-    if (System.nanoTime() - this.start_time >= this.MAX_TIME) {
+    if (System.nanoTime() - start_time >= this.MAX_TIME) {
       return true;
     } 
     // if (state.depth > 4) {

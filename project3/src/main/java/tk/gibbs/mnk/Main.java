@@ -53,13 +53,13 @@ public class Main {
       String last_move = (char)(state.last_move_x + 'a') + "" + (state.last_move_y + 1);
       if (first_play) {
         if (state.last_player == TileState.X) {
-          moves.add("   " + moves.size() + ". " + last_move);
+          moves.add(moves.size() + ". " + last_move);
         } else {
           moves.set(moves.size() - 1, moves.get(moves.size() - 1) + " " + last_move);
         }
       } else {
         if (state.last_player == TileState.O) {
-          moves.add("   " + moves.size() + ". " + last_move);
+          moves.add(moves.size() + ". " + last_move);
         } else {
           moves.set(moves.size() - 1, moves.get(moves.size() - 1) + " " + last_move);
         }
@@ -67,7 +67,7 @@ public class Main {
       String last_player = state.last_player == TileState.X ? "  Player" : "Opponent";
       board_string += "                  \n" + last_player + "'s move is: " + last_move;
       if (state.terminal_state) {
-        String color = state.last_player == TileState.X ? ANSIColors.RED_BOLD_BRIGHT : ANSIColors.GREEN_BOLD_BRIGHT;
+        String color = state.last_player == TileState.X ? ANSIColors.GREEN_BOLD_BRIGHT : ANSIColors.RED_BOLD_BRIGHT;
         board_string += "                  \n" + color + last_player.toUpperCase() + " WINS!" + ANSIColors.RESET;
       }
     }
@@ -79,25 +79,25 @@ public class Main {
     if (moves.size() < board.length) {
       // Output all of the moves
       for (int i = 0; i < moves.size(); i++) {
-        System.out.println(board[i] + "   " + moves.get(i));
+        System.out.println(board[i] + "      " + moves.get(i));
       }
       // Then finish off the board
       for (int i = moves.size(); i < board.length; i++) {
         System.out.println(board[i]);
       }
     } else {
-      // If the moves column is longer than the board
+      // If the moves column is longer than or equal to the board
       // Print entire board
       for (int i = 0; i < board.length; i++) {
         if (i == 10) {
-          System.out.println(board[i] + moves.get(i));
-        } else {
           System.out.println(board[i] + " " + moves.get(i));
+        } else {
+          System.out.println(board[i] + "      " + moves.get(i));
         }
       }
       // Then finish printing the moves
       for (int i = board.length; i < moves.size(); i++) {
-        System.out.println("                    " + moves.get(i));
+        System.out.println("                       " + moves.get(i));
       }
     }
 
@@ -105,7 +105,7 @@ public class Main {
 
   public static BoardState askMove (BoardState board) {
     Scanner scanner = new Scanner(System.in);
-    System.out.print("\nChoose Opporent's next move: ");
+    System.out.print("\nChoose Opponent's next move: ");
     while (!scanner.hasNextLine()) {
       scanner.next();
     }
