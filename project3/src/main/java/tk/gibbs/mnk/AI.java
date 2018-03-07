@@ -105,6 +105,7 @@ public class AI {
     // out(state.children.peek().toString());
     // out("maxValue returned " + v + "\n");
     // "return the action in successors(state) with value v"
+    // return state.children.poll();    
     return this.highest;
   }
 
