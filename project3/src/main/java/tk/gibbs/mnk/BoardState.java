@@ -3,11 +3,12 @@ package tk.gibbs.mnk;
 public class BoardState {
   final public TileState[][] board;
   final public String hash;
-  final public int heuristicVal;
+  final public int heuristic_value;
   final TileState last_player;
   final public int last_move_x;
   final public int last_move_y;
   final public int depth;
+  final public boolean terminal_state;
 
   // TileState[][] getBoard () { return board; }
   // String getHash () { return hash; }
@@ -33,8 +34,9 @@ public class BoardState {
     this.last_move_y = last_move_y;
     this.depth = depth;
     // TODO: calculate heuristicVal & hash
-    this.heuristicVal = 0;
+    this.heuristic_value = 0;
     this.hash = "hash";
+    this.terminal_state = this.terminalTest();
   }
 
   static TileState[][] generateEmptyBoard () {
@@ -66,6 +68,41 @@ public class BoardState {
     updatedBoard[col][row] = player;
 
     return new BoardState(updatedBoard, player, col, row, this.depth + 1);
+  }
+
+  // Return whether or not this is a winning board
+  public boolean terminalTest () {
+    int x = this.last_move_x;
+    int y = this.last_move_y;
+    TileState player = this.board[x][y];
+
+    // Move all the way to the left
+    int i = x;
+    while (--i != -1 && this.board[i][y] == player);
+    // Check if the four to the right are the same
+    if (i < 4) {
+      if (this.board[i + 1][y] == player &&
+          this.board[i + 2][y] == player &&
+          this.board[i + 3][y] == player &&
+          this.board[i + 4][y] == player) {
+        return true;
+      }
+    }
+
+    // Move all the way up
+    i = y;
+    while (--i != -1 && this.board[x][i] == player);
+    // Check if the four down are the same
+    if (i < 4) {
+      if (this.board[x][i + 1] == player &&
+          this.board[x][i + 2] == player &&
+          this.board[x][i + 3] == player &&
+          this.board[x][i + 4] == player) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   @Override

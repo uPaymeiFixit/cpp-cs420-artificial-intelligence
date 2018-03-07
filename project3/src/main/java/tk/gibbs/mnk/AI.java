@@ -126,7 +126,6 @@ public class AI {
   // Return whether or not we've run out of time or passed 4 layers
   private boolean cutoffTest (BoardState state) {
     if (System.nanoTime() - this.start_time >= this.MAX_TIME) {
-      // System.out.println("out of time!");
       return true;
     } 
     // if (state.depth > 4) {
@@ -137,48 +136,7 @@ public class AI {
   
   // Return whether or not this is a winning board (or cutoff point is reached)
   private boolean terminalTest (BoardState state) {
-    if (cutoffTest(state)) {
-      return true;
-    }
-
-    TileState[][] board = state.board;
-    int x = state.last_move_x;
-    int y = state.last_move_y;
-    TileState player = board[x][y];
-
-    // Check left
-    if (x > 2) {
-      if (player == board[x - 1][y] && 
-          player == board[x - 2][y] && 
-          player == board[x - 3][y]) {
-        return true;
-      }
-    }
-    // Check right
-    if (x < 5) {
-      if (player == board[x + 1][y] && 
-          player == board[x + 2][y] && 
-          player == board[x + 3][y]) {
-        return true;
-      }
-    }
-    // Check up
-    if (y > 2) {
-      if (player == board[x][y - 1] && 
-          player == board[x][y - 2] && 
-          player == board[x][y - 3]) {
-        return true;
-      }
-    }
-    // Check down
-    if (y < 5) {
-      if (player == board[x][y + 1] && 
-          player == board[x][y + 2] && 
-          player == board[x][y + 3]) {
-        return true;
-      }
-    }
-    return false;
+    return cutoffTest(state) || state.terminal_state;
   }
 
   // Temporary heuristic: Count how many 2 in a row / column there are
@@ -201,6 +159,6 @@ public class AI {
   }
   // TEMPORARY DEBUG
   public static void outl (String string) {
-    System.out.print(ANSIColors.RED_BACKGROUND + string.replace("\n", "\n\t") + ANSIColors.RESET + "\n");
+    System.out.println(ANSIColors.RED_BACKGROUND + string.replace("\n", "\n\t") + ANSIColors.RESET);
   }
 }

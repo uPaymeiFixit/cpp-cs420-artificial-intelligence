@@ -13,7 +13,7 @@ public class Main {
   }
 
   public static void menu () {
-    double max_time = askMaxTime() * 10E8 - 3E6;
+    double max_time = askMaxTime() * 1E9 - 3E6;
     first_play = askFirstPlayer();
     BoardState state = new BoardState();
     printMove(state);
@@ -24,14 +24,16 @@ public class Main {
       printMove(state);
     }
 
-    while (true) {
+    while (!state.terminal_state) {
       state = askMove(state);
       printMove(state);
-      System.out.println(); AI.out("Thinking...");
+      if (state.terminal_state) {
+        break;
+      }
+      System.out.print('\n' + ANSIColors.WHITE + "Thinking...");
       state = ai.move(state);
-      AI.outl("Done (" + (System.nanoTime() - AI.start_time) + "µs)");
+      System.out.println("Done(" + (System.nanoTime() - AI.start_time) / 1E9 + " seconds)" + ANSIColors.RESET);
       printMove(state);
-      // System.out.println("Finished in " + (System.nanoTime() - AI.start_time) + "µs");
     }
     
   }
@@ -59,11 +61,15 @@ public class Main {
         if (state.last_player == TileState.O) {
           moves.add("   " + moves.size() + ". " + last_move);
         } else {
-          moves.get(moves.size() - 1).concat(" " + last_move);
+          moves.set(moves.size() - 1, moves.get(moves.size() - 1) + " " + last_move);
         }
       }
       String last_player = state.last_player == TileState.X ? "  Player" : "Opponent";
       board_string += "                  \n" + last_player + "'s move is: " + last_move;
+      if (state.terminal_state) {
+        String color = state.last_player == TileState.X ? ANSIColors.RED_BOLD_BRIGHT : ANSIColors.GREEN_BOLD_BRIGHT;
+        board_string += "                  \n" + color + last_player.toUpperCase() + " WINS!" + ANSIColors.RESET;
+      }
     }
 
     String[] board = board_string.split("\n");
