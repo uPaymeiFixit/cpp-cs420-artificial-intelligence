@@ -101,13 +101,13 @@ public class AI {
   }
 
   private BoardState alphaBetaSearch (BoardState state) {
-    successors_exhaustive(state);
-    outl("Heuristic value: " + state.children.peek().heuristic_value);
-    return state.children.poll();
-    // int v = maxValue(state, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    // successors_exhaustive(state);
+    // outl("Heuristic value: " + state.children.peek().heuristic_value);
+    // return state.children.poll();
+    int v = maxValue(state, Integer.MIN_VALUE, Integer.MAX_VALUE);
     // out("maxValue returned " + v + "\n");
     // "return the action in successors(state) with value v"
-    // return this.highest;
+    return this.highest;
   }
 
   private int maxValue (BoardState state, int alpha, int beta) {
@@ -157,7 +157,7 @@ public class AI {
 
   // Generate array of all possible next moves
   private BoardState[] successors_exhaustive (BoardState state) {
-    TileState next_player = state.board[state.last_move_x][state.last_move_y];
+    TileState next_player = state.last_player;
     next_player = next_player == TileState.X ? TileState.O : TileState.X;
 
     ArrayList<BoardState> states = new ArrayList<BoardState>(64);
@@ -172,7 +172,7 @@ public class AI {
   }
 
   private BoardState[] successors (BoardState state) {
-    TileState next_player = state.board[state.last_move_x][state.last_move_y];
+    TileState next_player = state.last_player;
     next_player = next_player == TileState.X ? TileState.O : TileState.X;
 
     ArrayList<BoardState> states = new ArrayList<BoardState>(64);

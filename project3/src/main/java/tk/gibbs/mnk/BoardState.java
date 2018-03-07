@@ -1,6 +1,6 @@
 package tk.gibbs.mnk;
 
-// import java.util.HashMap;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.lang.StringBuilder;
@@ -14,8 +14,8 @@ public class BoardState implements Comparable<BoardState> {
   final public int depth;
   final public boolean terminal_state;
   final public PriorityQueue<BoardState> children = new PriorityQueue<>();
-  // final public byte hash;
-  // final static public HashMap<Byte, BoardState> visited_states = new HashMap<>();
+  final public String hash;
+  final static public HashMap<String, BoardState> visited_states = new HashMap<>();
 
   BoardState () {
     // Initilaize with empty board
@@ -23,11 +23,11 @@ public class BoardState implements Comparable<BoardState> {
   }
 
   BoardState (TileState[][] board) {
-    this(board, TileState.X, 0, 0, 0, (byte)0);
+    this(board, TileState.X, 0, 0, 0, "");
   }
 
   BoardState (
-    TileState[][] board, TileState last_player, int last_move_x, int last_move_y, int depth, byte hash
+    TileState[][] board, TileState last_player, int last_move_x, int last_move_y, int depth, String hash
   ) {
     this.board = board;
     this.last_player = last_player;
@@ -36,12 +36,12 @@ public class BoardState implements Comparable<BoardState> {
     this.depth = depth;
     this.terminal_state = this.terminalTest();
     this.heuristic_value = this.heuristic();
-    // this.hash = hash;
-    // BoardState.visited_states.put(this.hash, this);
+    this.hash = hash;
+    BoardState.visited_states.put(this.hash, this);
 
   }
 
-  private static byte generateKey (TileState[][] board) {
+  private static String generateKey (TileState[][] board) {
     StringBuilder hash_string = new StringBuilder();
     for (int i = 0; i < board.length; i++) {
       for (int j = 0; j < board[i].length; j++) {
@@ -64,11 +64,7 @@ public class BoardState implements Comparable<BoardState> {
         }
       }
     }
-    String s = hash_string.toString();
-    AI.outl(s);
-    byte b = Byte.parseByte(s);
-    AI.outl(b + "");
-    return b;
+    return hash_string.toString();
   }
 
   private static TileState[][] generateEmptyBoard () {
@@ -98,13 +94,12 @@ public class BoardState implements Comparable<BoardState> {
     }
 
     updated_board[col][row] = player;
-    byte hash = 0; //generateKey(updated_board);
-    // BoardState new_board = visited_states.get(hash);
-    // if (new_board == null) {
-    //   new_board = new BoardState(updated_board, player, col, row, this.depth + 1, hash);
-    // }
-
-    BoardState new_board = new BoardState(updated_board, player, col, row, this.depth + 1, hash);
+    String hash = generateKey(updated_board);
+    BoardState new_board = visited_states.get(hash);
+    if (new_board == null) {
+      // TODO: this.last_move_x and last_move_y might be different
+      new_board = new BoardState(updated_board, player, col, row, this.depth + 1, hash);
+    }
     this.children.offer(new_board);
     return new_board;
   }
