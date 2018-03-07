@@ -37,6 +37,18 @@ public class AI {
             new BoardTile(3, 0),
           }, 100
         ),
+        // 2 L unbounded 2 in a row
+        new Pattern(
+          new BoardTile[]{
+            new BoardTile(0, 0, AbstractTileState.PLAYER),
+            new BoardTile(1, 0, AbstractTileState.PLAYER),
+            new BoardTile(0, 1, AbstractTileState.PLAYER),
+            new BoardTile(-1, 0),
+            new BoardTile(0, -1),
+            new BoardTile(2, 0),
+            new BoardTile(0, 2),
+          }, 500
+        ),
         // unbounded 3 in a row
         new Pattern(
           new BoardTile[]{
