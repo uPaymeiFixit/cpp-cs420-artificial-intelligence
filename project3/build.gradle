@@ -31,5 +31,9 @@ run {
   standardInput = System.in
 }
 
+test {
+  testLogging.showStandardStreams = true
+}
+
 // Define the main class for the application
 mainClassName = 'tk.gibbs.mnk.Main'

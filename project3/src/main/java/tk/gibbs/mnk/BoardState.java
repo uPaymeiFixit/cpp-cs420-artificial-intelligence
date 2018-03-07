@@ -104,6 +104,10 @@ public class BoardState {
 
     return false;
   }
+  
+  Pattern[] findPatterns (TileState player) {
+    return null;
+  }
 
   @Override
   public String toString () {
@@ -122,10 +126,10 @@ public class BoardState {
       for (int n = 0; n < board[i].length; n++) {
         switch (board[i][n]) {
           case X:
-            out += String.format("%s✕%s ", ANSIColors.RED, ANSIColors.RESET);
+            out += String.format("%s✕%s ", ANSIColors.GREEN, ANSIColors.RESET);
             break;
           case O:
-            out += String.format("%s◯%s ", ANSIColors.GREEN, ANSIColors.RESET);
+            out += String.format("%s◯%s ", ANSIColors.RED, ANSIColors.RESET);
             break;
           case EMPTY:
             out += String.format("%s∙%s ", ANSIColors.BLACK_BRIGHT, ANSIColors.RESET);

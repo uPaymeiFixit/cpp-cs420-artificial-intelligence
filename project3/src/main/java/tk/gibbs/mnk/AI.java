@@ -28,7 +28,7 @@ public class AI {
 
   private int maxValue (BoardState state, int alpha, int beta) {
     if (terminalTest(state)) {
-      return utility(state);
+      return utility(TileState.X, state);
     }
     int v = Integer.MIN_VALUE;
     BoardState w = state;
@@ -47,7 +47,7 @@ public class AI {
 
   private int minValue (BoardState state, int alpha, int beta) {
     if (terminalTest(state)) {
-      return utility(state);
+      return utility(TileState.O, state);
     }
     int v = Integer.MAX_VALUE;
     for (BoardState s : successors(state)) {
@@ -140,7 +140,7 @@ public class AI {
   }
 
   // Temporary heuristic: Count how many 2 in a row / column there are
-  private int utility (BoardState state) {
+  private int utility (TileState player, BoardState state) {
     int score = 0;
     for (int i = 1; i < state.board.length; i++) {
       for (int j = 1; j < state.board[i].length; j++) {
