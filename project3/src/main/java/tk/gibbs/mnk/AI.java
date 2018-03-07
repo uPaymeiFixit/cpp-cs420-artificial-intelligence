@@ -1,6 +1,7 @@
 package tk.gibbs.mnk;
 
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 
 public class AI {
 
@@ -26,6 +27,16 @@ public class AI {
     return this.highest;
   }
 
+  private void print (BoardState state) {
+    java.lang.StringBuilder sb = new java.lang.StringBuilder();
+    int x = state.depth > 64 ? 64 : state.depth;
+    for (int i = 0; i < x; i++) {
+      sb.append(' ');
+    }
+    sb.append(state.depth);
+    outl(sb.toString());
+  }
+
   private int maxValue (BoardState state, int alpha, int beta) {
     if (terminalTest(state)) {
       return utility(TileState.X, state);
@@ -33,6 +44,7 @@ public class AI {
     int v = Integer.MIN_VALUE;
     BoardState w = state;
     for (BoardState s : successors(state)) {
+      print(state);
       w = s;
       v = max(v, minValue(s, alpha, beta));
       if (v >= beta) {
@@ -142,11 +154,40 @@ public class AI {
   // Temporary heuristic: Count how many 2 in a row / column there are
   private int utility (TileState player, BoardState state) {
     int score = 0;
+
+    // If we won, give this the highest possible value
+    if (state.terminal_state) {
+      return Integer.MAX_VALUE;
+    }
+    
+    // Add 2 if 2 in a row, subtract 1 if they have two in a row
     for (int i = 1; i < state.board.length; i++) {
       for (int j = 1; j < state.board[i].length; j++) {
         if (state.board[i][j] == state.board[i - 1][j] ||
             state.board[i][j] == state.board[i][j - 1]) {
-          score++;
+          if (state.board[i][j] == player) {
+            score += 2;
+          } else {
+            score--;
+          }
+        }
+      }
+    }
+
+    // Give [ ][x][x][ ] pattern 500 points
+    for (int i = 0; i < state.board.length - 3; i++) {
+      for (int j = 0; j < state.board[i].length - 3; j++) {
+        if (state.board[i][j] == TileState.EMPTY &&
+            state.board[i + 1][j] == player &&
+            state.board[i + 2][j] == player &&
+            state.board[i + 3][j] == TileState.EMPTY) {
+          score += 500;
+        }
+        if (state.board[i][j] == TileState.EMPTY &&
+            state.board[i][j + 1] == player &&
+            state.board[i][j + 2] == player &&
+            state.board[i][j + 3] == TileState.EMPTY) {
+          score += 500;
         }
       }
     }
