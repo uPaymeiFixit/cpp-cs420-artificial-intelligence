@@ -1,12 +1,12 @@
-# CS 420 Project 1
+# CS 420 Project 3
 
 ## Instructions
 ### Compile
 ```
-cd src
-javac NQueen.java
+# Gradle compilation instructions
+gradle build
 ```
 ### Run
-`java /Menu`
-
-![image](https://user-images.githubusercontent.com/1683528/36087100-497e6234-0f85-11e8-9a2f-5ae68da5638d.png)
+```
+java -cp build/libs/project3.jar tk.gibbs.mnk.Main
+```
