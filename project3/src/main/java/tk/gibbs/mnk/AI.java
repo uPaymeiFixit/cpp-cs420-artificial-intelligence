@@ -116,13 +116,14 @@ public class AI {
     start_time = System.nanoTime();
     // return alphaBetaSearch(state);
     // return dumbSearch(state);
-    return twoSearch(state);
+    return twoPlieSearch(state);
+    // return nPlieSearch(state);
   }
 
-  private BoardState twoSearch (BoardState state) {
+  private BoardState twoPlieSearch (BoardState state) {
     double first_plie_weight = 0.75;
     successors_exhaustive(state);
-    double best_heuristic = 0;
+    double best_heuristic = Double.MIN_VALUE;
     BoardState best_board = state.children.peek();
     for (BoardState s : state.children) {
       successors_exhaustive(s);
@@ -140,6 +141,38 @@ public class AI {
       }
     }
     return best_board;
+  }
+
+  private BoardState nPlieSearch (BoardState state) {
+    int n = 1;
+    double weight = 0.5;
+    successors_exhaustive(state);
+    double best_heuristic = Double.MIN_VALUE;
+    BoardState best_board = state.children.peek();
+    for (BoardState s : state.children) {
+      double average = weight * s.heuristic_value;
+      average += (1 - weight) * getAverage(s, n, weight);
+      if (average > best_heuristic) {
+        best_heuristic = average;
+        best_board = s;
+      }
+    }
+    return best_board;
+  }
+
+  private double getAverage (BoardState state, int n, double weight) {
+    successors_exhaustive(state);
+    double sum = 0;
+    for (BoardState s : state.children) {
+      barChart(s.depth);
+      if (n == 0) {
+        sum += s.heuristic_value;
+      } else {
+        sum += getAverage(s, n - 1, weight);
+      }
+    }
+    sum /= state.children.size();
+    return weight * state.heuristic_value + (1 - weight) * sum;
   }
 
   private BoardState dumbSearch (BoardState state) {
@@ -270,15 +303,40 @@ public class AI {
   }
 
 
-  // TEMPORARY DEBUG
-  private void printDepth (BoardState state) {
+  private static int last_seen_number = -1;
+  private static int count = 0;
+  // PRINTS A HORIZONTAL REPRESENTATION OF THE NUMBER. MAX IS 64
+  private void barChart (int value) {
+    // Constraints on n
+    value = value > 64 ? 64 : value;
+
+    if (value == last_seen_number) {
+      if (count == 2) {
+        String text = " " + value + " SUPPRESSING ";
+        System.out.println(ANSIColors.CYAN_BACKGROUND_BRIGHT + text + ANSIColors.PURPLE_BACKGROUND_BRIGHT + leftPad(value - text.length()) + ANSIColors.RESET);
+      }
+      count++;
+    } else if (count != 0) {
+      // We've just switched to a new number, so alert the user how many times that number was missed
+      String text = " " + last_seen_number + " REPEATED " + count + " TIMES ";
+      System.out.println(ANSIColors.CYAN_BACKGROUND_BRIGHT + text + ANSIColors.PURPLE_BACKGROUND_BRIGHT + leftPad(value - text.length()) + ANSIColors.RESET);
+      count = 0;
+    } else {
+      String text = " " + value + " ";
+      System.out.println(ANSIColors.CYAN_BACKGROUND_BRIGHT + text + ANSIColors.RED_BACKGROUND_BRIGHT + leftPad(value - text.length()) + ANSIColors.RESET);
+    }
+    last_seen_number = value;
+  }
+
+  public static String leftPad (int n) {
+    if (n < 0) {
+      return "";
+    }
     java.lang.StringBuilder sb = new java.lang.StringBuilder();
-    int x = state.depth > 64 ? 64 : state.depth;
-    for (int i = 0; i < x; i++) {
+    for (int i = 0; i < n; i++) {
       sb.append(' ');
     }
-    sb.append(state.depth);
-    outl(sb.toString());
+    return sb.toString();
   }
   // TEMPORARY DEBUG
   public static void out (String string) {
