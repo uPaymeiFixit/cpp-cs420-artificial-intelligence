@@ -1,39 +1,105 @@
 package tk.gibbs.mnk;
 
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Main {
+
+  private static ArrayList<String> moves = new ArrayList<String>(64);
+  private static boolean first_play;
+
   public static void main (String[] args) {
     menu();
   }
 
   public static void menu () {
-    double max_time = 30.0;//askMaxTime();
-    boolean first_play = true;//askFirstPlayer();
-
+    double max_time = askMaxTime() * 10E8 - 3E6;
+    first_play = askFirstPlayer();
     BoardState state = new BoardState();
-    System.out.println(state); // Print blank board
-    
+    printMove(state);
     AI ai = new AI(max_time);
 
     if (first_play) {
       state = state.copyBoardWithMove(TileState.X, 4, 4);
-      System.out.println(state);
+      printMove(state);
     }
 
     while (true) {
       state = askMove(state);
-      System.out.println(state);
-      System.out.println("Thinking...");
+      printMove(state);
+      System.out.println(); AI.out("Thinking...");
       state = ai.move(state);
-      System.out.println(state);
+      AI.outl("Done (" + (System.nanoTime() - AI.start_time) + "µs)");
+      printMove(state);
+      // System.out.println("Finished in " + (System.nanoTime() - AI.start_time) + "µs");
     }
     
   }
 
+  public static void printMove (BoardState state) {
+    String board_string = state.toString();
+
+    // If nobody has played, add header to moves
+    if (state.depth == 0) {
+      if (first_play) {
+        moves.add("  Player vs. Opponent");
+      } else {
+        moves.add("Opponent vs. Player");
+      }
+    } else {
+      // If we're currently playing, get the last move and last player
+      String last_move = (char)(state.last_move_x + 'a') + "" + (state.last_move_y + 1);
+      if (first_play) {
+        if (state.last_player == TileState.X) {
+          moves.add("   " + moves.size() + ". " + last_move);
+        } else {
+          moves.set(moves.size() - 1, moves.get(moves.size() - 1) + " " + last_move);
+        }
+      } else {
+        if (state.last_player == TileState.O) {
+          moves.add("   " + moves.size() + ". " + last_move);
+        } else {
+          moves.get(moves.size() - 1).concat(" " + last_move);
+        }
+      }
+      String last_player = state.last_player == TileState.X ? "  Player" : "Opponent";
+      board_string += "                  \n" + last_player + "'s move is: " + last_move;
+    }
+
+    String[] board = board_string.split("\n");
+    System.out.println();
+
+    // If moves column is shorter than board
+    if (moves.size() < board.length) {
+      // Output all of the moves
+      for (int i = 0; i < moves.size(); i++) {
+        System.out.println(board[i] + "   " + moves.get(i));
+      }
+      // Then finish off the board
+      for (int i = moves.size(); i < board.length; i++) {
+        System.out.println(board[i]);
+      }
+    } else {
+      // If the moves column is longer than the board
+      // Print entire board
+      for (int i = 0; i < board.length; i++) {
+        if (i == 10) {
+          System.out.println(board[i] + moves.get(i));
+        } else {
+          System.out.println(board[i] + " " + moves.get(i));
+        }
+      }
+      // Then finish printing the moves
+      for (int i = board.length; i < moves.size(); i++) {
+        System.out.println("                    " + moves.get(i));
+      }
+    }
+
+  }
+
   public static BoardState askMove (BoardState board) {
     Scanner scanner = new Scanner(System.in);
-    System.out.print("Choose player's next move:\n: ");
+    System.out.print("\nChoose Opporent's next move: ");
     while (!scanner.hasNextLine()) {
       scanner.next();
     }
@@ -69,7 +135,7 @@ public class Main {
 
   public static boolean askFirstPlayer () {
     Scanner scanner = new Scanner(System.in);
-    System.out.println("Are we making the first move? (y/n)\n: ");
+    System.out.print("Are we making the first move? (y/n)\n: ");
     while (!scanner.hasNextLine()) {
       scanner.next();
     }
