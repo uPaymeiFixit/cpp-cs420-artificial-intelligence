@@ -1,8 +1,9 @@
 package tk.gibbs.mnk;
 
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 
-public class BoardState {
+public class BoardState implements Comparable<BoardState> {
   final public TileState[][] board;
   final public String hash;
   final public int heuristic_value;
@@ -11,6 +12,7 @@ public class BoardState {
   final public int last_move_y;
   final public int depth;
   final public boolean terminal_state;
+  final static public  PriorityQueue<BoardState> visited_states = new PriorityQueue<>();
 
   // TileState[][] getBoard () { return board; }
   // String getHash () { return hash; }
@@ -35,10 +37,11 @@ public class BoardState {
     this.last_move_x = last_move_x;
     this.last_move_y = last_move_y;
     this.depth = depth;
-    // TODO: calculate heuristicVal & hash
-    this.heuristic_value = 0;
-    this.hash = "hash";
     this.terminal_state = this.terminalTest();
+    this.heuristic_value = this.heuristic();
+    // TODO: calculate hash
+    this.hash = "hash";
+    BoardState.visited_states.offer(this);
   }
 
   static TileState[][] generateEmptyBoard () {
@@ -105,6 +108,49 @@ public class BoardState {
     }
 
     return false;
+  }
+
+  private int heuristic () {
+    int score = 0;
+
+    // If we won, give this the highest possible value
+    if (this.terminal_state) {
+      return Integer.MAX_VALUE;
+    }
+    
+    // Add 2 if 2 in a row, subtract 1 if they have two in a row
+    for (int i = 1; i < this.board.length; i++) {
+      for (int j = 1; j < this.board[i].length; j++) {
+        if (this.board[i][j] == this.board[i - 1][j] ||
+            this.board[i][j] == this.board[i][j - 1]) {
+          if (this.board[i][j] == this.last_player) {
+            score += 2;
+          } else {
+            score--;
+          }
+        }
+      }
+    }
+
+    // Give [ ][x][x][ ] pattern 500 points
+    for (int i = 0; i < this.board.length - 3; i++) {
+      for (int j = 0; j < this.board[i].length - 3; j++) {
+        if (this.board[i][j] == TileState.EMPTY &&
+            this.board[i + 1][j] == this.last_player &&
+            this.board[i + 2][j] == this.last_player &&
+            this.board[i + 3][j] == TileState.EMPTY) {
+          score += 500;
+        }
+        if (this.board[i][j] == TileState.EMPTY &&
+            this.board[i][j + 1] == this.last_player &&
+            this.board[i][j + 2] == this.last_player &&
+            this.board[i][j + 3] == TileState.EMPTY) {
+          score += 500;
+        }
+      }
+    }
+
+    return score;
   }
 
   Pattern[] findPatterns (TileState player, Pattern[] patterns) {
@@ -179,5 +225,10 @@ public class BoardState {
     }
 
     return out;
+  }
+
+  @Override
+  public int compareTo(BoardState state) {
+    return state.heuristic_value - this.heuristic_value;
   }
 }
