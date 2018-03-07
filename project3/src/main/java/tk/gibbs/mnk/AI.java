@@ -9,6 +9,59 @@ public class AI {
   public static long start_time;
   private BoardState highest;
 
+  // TODO: make sure there aren't any more patterns we care about
+  // TODO: update values
+  private static final Pattern[] patterns = new Pattern[]{
+    // unbounded 2 in a row
+    new Pattern(
+      new BoardTile[]{
+        new BoardTile(0, 0, AbstractTileState.PLAYER),
+        new BoardTile(1, 0, AbstractTileState.PLAYER),
+        new BoardTile(-1, 0),
+        new BoardTile(2, 0),
+      }, 10
+    ),
+    // unbounded 1 and 1 in a row
+    new Pattern(
+      new BoardTile[]{
+        new BoardTile(0, 0, AbstractTileState.PLAYER),
+        new BoardTile(1, 0, AbstractTileState.PLAYER),
+        new BoardTile(-1, 0),
+        new BoardTile(2, 0),
+        new BoardTile(3, 0),
+      }, 10
+    ),
+    // unbounded 3 in a row
+    new Pattern(
+      new BoardTile[]{
+        new BoardTile(0, 0, AbstractTileState.PLAYER),
+        new BoardTile(1, 0, AbstractTileState.PLAYER),
+        new BoardTile(2, 0, AbstractTileState.PLAYER),
+        new BoardTile(-1, 0),
+        new BoardTile(2, 0),
+      }, 10
+    ),
+    // single bounded 3 in a row
+    new Pattern(
+      new BoardTile[]{
+        new BoardTile(0, 0, AbstractTileState.PLAYER),
+        new BoardTile(1, 0, AbstractTileState.PLAYER),
+        new BoardTile(2, 0, AbstractTileState.PLAYER),
+        new BoardTile(3, 0),
+        new BoardTile(-1, 0, AbstractTileState.OPPONENT),
+      }, 10
+    ),
+    // 4 in a row
+    new Pattern(
+      new BoardTile[]{
+        new BoardTile(0, 0, AbstractTileState.PLAYER),
+        new BoardTile(1, 0, AbstractTileState.PLAYER),
+        new BoardTile(2, 0, AbstractTileState.PLAYER),
+        new BoardTile(3, 0, AbstractTileState.PLAYER),
+      }, Integer.MAX_VALUE
+    ),
+  };
+
   public AI (double max_time) {
     this.MAX_TIME = max_time;
   }
@@ -139,13 +192,13 @@ public class AI {
   private boolean cutoffTest (BoardState state) {
     if (System.nanoTime() - start_time >= this.MAX_TIME) {
       return true;
-    } 
+    }
     // if (state.depth > 4) {
     //   return true;
     // }
     return false;
   }
-  
+
   // Return whether or not this is a winning board (or cutoff point is reached)
   private boolean terminalTest (BoardState state) {
     return cutoffTest(state) || state.terminal_state;
@@ -191,6 +244,7 @@ public class AI {
         }
       }
     }
+
     return score;
   }
 

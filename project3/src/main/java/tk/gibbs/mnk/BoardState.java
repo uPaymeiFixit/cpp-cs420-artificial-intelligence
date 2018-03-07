@@ -104,9 +104,10 @@ public class BoardState {
 
     return false;
   }
-  
-  Pattern[] findPatterns (TileState player) {
-    return null;
+
+  Pattern[] findPatterns (TileState player, Pattern[] patterns) {
+    // TODO: implement pattern matching
+    return new Pattern[0];
   }
 
   @Override
