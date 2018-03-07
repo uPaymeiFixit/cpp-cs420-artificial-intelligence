@@ -150,7 +150,7 @@ public class BoardState implements Comparable<BoardState> {
     int score = 0;
     final Pattern[] found_patternsO = this.findPatterns(TileState.O, AI.patterns);
     for (Pattern p : found_patternsO) {
-      score -= 2 * p.value;
+      score -= 4 * p.value;
     }
     final Pattern[] found_patternsX = this.findPatterns(TileState.X, AI.patterns);
     for (Pattern p : found_patternsX) {
