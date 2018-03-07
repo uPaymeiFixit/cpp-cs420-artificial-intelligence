@@ -25,7 +25,7 @@ public class AI {
             new BoardTile(1, 0, AbstractTileState.PLAYER),
             new BoardTile(-1, 0),
             new BoardTile(2, 0),
-          }, 100
+          }, 50
         ),
         // unbounded 1 and 1 in a row
         // ∙ ✕ ∙ ✕ ∙
@@ -66,7 +66,7 @@ public class AI {
           }, 5000
         ),
         // single bounded 3 in a row
-        // ∙ ✕ ✕ ✕
+        // ∙ ✕ ✕ ✕ ◯
         new Pattern(
           new BoardTile[]{
             new BoardTile(0, 0, AbstractTileState.PLAYER),
@@ -74,7 +74,7 @@ public class AI {
             new BoardTile(2, 0, AbstractTileState.PLAYER),
             new BoardTile(3, 0),
             new BoardTile(-1, 0, AbstractTileState.OPPONENT),
-          }, 20
+          }, 1000
         ),
         // 4 in a row
         // ✕ ✕ ✕ ✕
