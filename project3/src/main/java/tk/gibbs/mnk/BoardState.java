@@ -137,28 +137,27 @@ public class BoardState implements Comparable<BoardState> {
     return false;
   }
 
+  // This heuristic currently values defence 2x as much as offence
   private int heuristic () {
-    // TileState player = this.last_player == TileState.X ? TileState.O : TileState.X;
-    TileState player = this.last_player;
-    int score = 0;
-
     if (this.terminal_state) {
-      score = 2000000;
-      // AI.outl("FOUND IT!");
-      // AI.outl(this.toString());
-      return player == TileState.X ? score : -score;
+      if (this.last_player == TileState.O) {
+        return Integer.MIN_VALUE;
+      } else {
+        return Integer.MAX_VALUE;
+      }
     }
 
-    final Pattern[] foundPatterns = this.findPatterns(player, AI.patterns);
-    for (Pattern p : foundPatterns) {
-      // AI.outl(" v  v  v  v  v  v  v ");
-      // AI.outl(p.toString());
-      // AI.outl(p.value + "");
-      // AI.outl(" ^  ^  ^  ^  ^  ^  ^ ");
+    int score = 0;
+    final Pattern[] found_patternsO = this.findPatterns(TileState.O, AI.patterns);
+    for (Pattern p : found_patternsO) {
+      score -= 2 * p.value;
+    }
+    final Pattern[] found_patternsX = this.findPatterns(TileState.X, AI.patterns);
+    for (Pattern p : found_patternsX) {
       score += p.value;
     }
 
-    return player == TileState.X ? score : -score;
+    return score;
   }
 
   Pattern[] findPatterns (TileState player, Pattern[] patterns) {
