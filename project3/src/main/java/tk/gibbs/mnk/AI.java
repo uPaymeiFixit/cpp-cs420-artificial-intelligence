@@ -63,10 +63,6 @@ public class AI {
 
   public AI (double max_time) {
     this.MAX_TIME = max_time;
-
-    for (Pattern pattern : patterns) {
-      System.out.println(pattern);
-    }
   }
 
   // Return the best move given the state
@@ -87,12 +83,19 @@ public class AI {
 
   private int maxValue (BoardState state, int alpha, int beta) {
     if (terminalTest(state)) {
-      return utility(TileState.X, state);
+      return state.heuristic_value;
     }
     int v = Integer.MIN_VALUE;
     BoardState w = state;
-    for (BoardState s : successors(state)) {
+    successors(state);
+    while (state.children.size() != 0) {
+    // for (BoardState s : state.children) {
+      BoardState s = state.children.poll();
+      if (s.heuristic_value == Integer.MAX_VALUE) {
+        outl(s.toString());
+      }
       // printDepth(state);
+      // outl(s.heuristic_value + "");
       w = s;
       v = Math.max(v, minValue(s, alpha, beta));
       if (v >= beta) {
@@ -107,7 +110,7 @@ public class AI {
 
   private int minValue (BoardState state, int alpha, int beta) {
     if (terminalTest(state)) {
-      return utility(TileState.O, state);
+      return state.heuristic_value;
     }
     int v = Integer.MAX_VALUE;
     for (BoardState s : successors(state)) {
@@ -189,14 +192,6 @@ public class AI {
   // Return whether or not this is a winning board (or cutoff point is reached)
   private boolean terminalTest (BoardState state) {
     return cutoffTest(state) || state.terminal_state;
-  }
-
-  // Temporary heuristic: Count how many 2 in a row / column there are
-  private int utility (TileState player, BoardState state) {
-    // if (player != state.last_player) {
-    //   out("PROBLEM PROBLEM PROBLEM PROBLEM");
-    // }
-    return state.heuristic_value;
   }
 
 

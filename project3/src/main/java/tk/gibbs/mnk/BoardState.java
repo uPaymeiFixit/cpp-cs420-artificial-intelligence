@@ -1,11 +1,12 @@
 package tk.gibbs.mnk;
 
+// import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.lang.StringBuilder;
 
 public class BoardState implements Comparable<BoardState> {
   final public TileState[][] board;
-  final public String hash;
   final public int heuristic_value;
   final public TileState last_player;
   final public int last_move_x;
@@ -13,7 +14,8 @@ public class BoardState implements Comparable<BoardState> {
   final public int depth;
   final public boolean terminal_state;
   final public PriorityQueue<BoardState> children = new PriorityQueue<>();
-  final static public PriorityQueue<BoardState> visited_states = new PriorityQueue<>();
+  // final public byte hash;
+  // final static public HashMap<Byte, BoardState> visited_states = new HashMap<>();
 
   BoardState () {
     // Initilaize with empty board
@@ -21,11 +23,11 @@ public class BoardState implements Comparable<BoardState> {
   }
 
   BoardState (TileState[][] board) {
-    this(board, TileState.X, 0, 0, 0);
+    this(board, TileState.X, 0, 0, 0, (byte)0);
   }
 
   BoardState (
-    TileState[][] board, TileState last_player, int last_move_x, int last_move_y, int depth
+    TileState[][] board, TileState last_player, int last_move_x, int last_move_y, int depth, byte hash
   ) {
     this.board = board;
     this.last_player = last_player;
@@ -34,9 +36,39 @@ public class BoardState implements Comparable<BoardState> {
     this.depth = depth;
     this.terminal_state = this.terminalTest();
     this.heuristic_value = this.heuristic();
-    // TODO: calculate hash
-    this.hash = "hash";
-    BoardState.visited_states.offer(this);
+    // this.hash = hash;
+    // BoardState.visited_states.put(this.hash, this);
+
+  }
+
+  private static byte generateKey (TileState[][] board) {
+    StringBuilder hash_string = new StringBuilder();
+    for (int i = 0; i < board.length; i++) {
+      for (int j = 0; j < board[i].length; j++) {
+        if (board[i][j] == TileState.X) {
+          char y;
+          if (j > 2) {
+            y = (char)(j + 'a');
+          } else {
+            y = (char)j;
+          }
+          hash_string.append(i + "" + y);
+        } else if (board[i][j] == TileState.O) {
+          char y;
+          if (i > 2) {
+            y = (char)(i + 'a');
+          } else {
+            y = (char)i;
+          }
+          hash_string.append(y + "" + j);
+        }
+      }
+    }
+    String s = hash_string.toString();
+    AI.outl(s);
+    byte b = Byte.parseByte(s);
+    AI.outl(b + "");
+    return b;
   }
 
   private static TileState[][] generateEmptyBoard () {
@@ -66,7 +98,13 @@ public class BoardState implements Comparable<BoardState> {
     }
 
     updated_board[col][row] = player;
-    BoardState new_board = new BoardState(updated_board, player, col, row, this.depth + 1);
+    byte hash = 0; //generateKey(updated_board);
+    // BoardState new_board = visited_states.get(hash);
+    // if (new_board == null) {
+    //   new_board = new BoardState(updated_board, player, col, row, this.depth + 1, hash);
+    // }
+
+    BoardState new_board = new BoardState(updated_board, player, col, row, this.depth + 1, hash);
     this.children.offer(new_board);
     return new_board;
   }
@@ -107,11 +145,12 @@ public class BoardState implements Comparable<BoardState> {
   }
 
   private int heuristic () {
+    TileState player = this.last_player == TileState.X ? TileState.O : TileState.X;
     int score = 0;
 
     // If we won, give this the highest possible value
     if (this.terminal_state) {
-      return Integer.MAX_VALUE;
+      return -100000;
     }
     
     // Add 2 if 2 in a row, subtract 1 if they have two in a row
@@ -119,7 +158,7 @@ public class BoardState implements Comparable<BoardState> {
       for (int j = 1; j < this.board[i].length; j++) {
         if (this.board[i][j] == this.board[i - 1][j] ||
             this.board[i][j] == this.board[i][j - 1]) {
-          if (this.board[i][j] == this.last_player) {
+          if (this.board[i][j] == player) {
             score += 2;
           } else {
             score--;
@@ -132,14 +171,14 @@ public class BoardState implements Comparable<BoardState> {
     for (int i = 0; i < this.board.length - 3; i++) {
       for (int j = 0; j < this.board[i].length - 3; j++) {
         if (this.board[i][j] == TileState.EMPTY &&
-            this.board[i + 1][j] == this.last_player &&
-            this.board[i + 2][j] == this.last_player &&
+            this.board[i + 1][j] == player &&
+            this.board[i + 2][j] == player &&
             this.board[i + 3][j] == TileState.EMPTY) {
           score += 500;
         }
         if (this.board[i][j] == TileState.EMPTY &&
-            this.board[i][j + 1] == this.last_player &&
-            this.board[i][j + 2] == this.last_player &&
+            this.board[i][j + 1] == player &&
+            this.board[i][j + 2] == player &&
             this.board[i][j + 3] == TileState.EMPTY) {
           score += 500;
         }
