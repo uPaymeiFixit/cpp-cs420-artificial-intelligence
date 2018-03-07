@@ -195,14 +195,12 @@ public class AI {
   // Temporary heuristic: Count how many 2 in a row / column there are
   private int utility (TileState player, BoardState state) {
     int score = 0;
-    for (int i = 1; i < state.board.length; i++) {
-      for (int j = 1; j < state.board[i].length; j++) {
-        if (state.board[i][j] == state.board[i - 1][j] ||
-            state.board[i][j] == state.board[i][j - 1]) {
-          score++;
-        }
-      }
+
+    final Pattern[] foundPatterns = state.findPatterns(player, patterns);
+    for (Pattern p : foundPatterns) {
+      score += p.value;
     }
+
     return score;
   }
 
