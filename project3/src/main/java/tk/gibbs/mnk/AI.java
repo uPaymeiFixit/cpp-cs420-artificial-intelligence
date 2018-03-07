@@ -102,7 +102,8 @@ public class AI {
 
   private BoardState alphaBetaSearch (BoardState state) {
     successors_exhaustive(state);
-    return state.children.poll();    
+    outl("Heuristic value: " + state.children.peek().heuristic_value);
+    return state.children.poll();
     // int v = maxValue(state, Integer.MIN_VALUE, Integer.MAX_VALUE);
     // out("maxValue returned " + v + "\n");
     // "return the action in successors(state) with value v"
