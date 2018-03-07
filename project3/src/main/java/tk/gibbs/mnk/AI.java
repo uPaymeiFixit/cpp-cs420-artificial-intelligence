@@ -8,6 +8,8 @@ public class AI {
   private final double MAX_TIME;
   public static long start_time;
   private BoardState highest;
+  public static final PriorityQueue<BoardState> visited_states = new PriorityQueue<>();
+  private int current_depth = 0;
 
   // TODO: make sure there aren't any more patterns we care about
   // TODO: update values
@@ -68,6 +70,7 @@ public class AI {
 
   // Return the best move given the state
   public BoardState move (BoardState state) {
+    this.current_depth = state.depth;
     start_time = System.nanoTime();
     BoardState next_state = alphaBetaSearch(state);
     return next_state;
@@ -97,7 +100,7 @@ public class AI {
     int v = Integer.MIN_VALUE;
     BoardState w = state;
     for (BoardState s : successors(state)) {
-      print(state);
+      // print(state);
       w = s;
       v = max(v, minValue(s, alpha, beta));
       if (v >= beta) {
@@ -193,9 +196,9 @@ public class AI {
     if (System.nanoTime() - start_time >= this.MAX_TIME) {
       return true;
     }
-    // if (state.depth > 4) {
-    //   return true;
-    // }
+    if (state.depth - this.current_depth > 7) {
+      return true;
+    }
     return false;
   }
 
