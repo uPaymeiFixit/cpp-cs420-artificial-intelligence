@@ -67,11 +67,11 @@ public class Pattern {
 
         if (tile == null) {
           out += String.format("%s?%s ", ANSIColors.BLACK_BRIGHT, ANSIColors.RESET);
-        } else if (tile.state == TileState.EMPTY) {
+        } else if (tile.state == AbstractTileState.EMPTY) {
           out += String.format("%s∙%s ", ANSIColors.WHITE, ANSIColors.RESET);
-        } else if (tile.state == TileState.X) {
+        } else if (tile.state == AbstractTileState.PLAYER) {
           out += String.format("%s✕%s ", ANSIColors.GREEN, ANSIColors.RESET);
-        } else if (tile.state == TileState.O) {
+        } else if (tile.state == AbstractTileState.OPPONENT) {
           out += String.format("%s◯%s ", ANSIColors.RED, ANSIColors.RESET);
         }
       }
