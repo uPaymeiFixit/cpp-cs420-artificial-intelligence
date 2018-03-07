@@ -1,5 +1,7 @@
 package tk.gibbs.mnk;
 
+import java.util.LinkedList;
+
 public class BoardState {
   final public TileState[][] board;
   final public String hash;
@@ -106,8 +108,44 @@ public class BoardState {
   }
 
   Pattern[] findPatterns (TileState player, Pattern[] patterns) {
-    // TODO: implement pattern matching
-    return new Pattern[0];
+    LinkedList<BoardTile> playerStones = new LinkedList<>();
+    LinkedList<BoardTile> opponentStones = new LinkedList<>();
+
+    for (int x = 0; x < this.board.length; x++) {
+      for (int y = 0; y < this.board[x].length; y++) {
+        if (this.board[x][y] == player) {
+          playerStones.add(new BoardTile(x, y, AbstractTileState.PLAYER));
+        } else if (this.board[x][y] != TileState.EMPTY) {
+          opponentStones.add(new BoardTile(x, y, AbstractTileState.OPPONENT));
+        }
+      }
+    }
+
+    LinkedList<Pattern> foundPatterns = new LinkedList<>();
+
+    for (BoardTile centerStone : playerStones) {
+      for (Pattern pattern : patterns) {
+        boolean match = true;
+        for (int i = 0; i < pattern.points.length; i++) {
+          final TileState tile = this.board[centerStone.x + pattern.points[i].x][centerStone.y + pattern.points[i].y];
+          if (tile == player && pattern.points[i].state == AbstractTileState.PLAYER) {
+            continue;
+          } else if (tile == TileState.EMPTY && pattern.points[i].state == AbstractTileState.EMPTY) {
+            continue;
+          } else if (tile != player && pattern.points[i].state == AbstractTileState.OPPONENT) {
+            continue;
+          } else {
+            match = false;
+            break;
+          }
+        }
+        if (match) {
+          foundPatterns.add(pattern);
+        }
+      }
+    }
+
+    return foundPatterns.toArray(new Pattern[0]);
   }
 
   @Override
