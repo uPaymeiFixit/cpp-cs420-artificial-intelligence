@@ -2,7 +2,7 @@ package tk.gibbs.mnk;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.lang.StringBuilder;
 
 public class BoardState implements Comparable<BoardState> {
@@ -13,7 +13,7 @@ public class BoardState implements Comparable<BoardState> {
   final public int last_move_y;
   final public int depth;
   final public boolean terminal_state;
-  final public PriorityQueue<BoardState> children = new PriorityQueue<>();
+  final public PriorityBlockingQueue<BoardState> children = new PriorityBlockingQueue<>();
   final public String hash;
   final static public HashMap<String, BoardState> visited_states = new HashMap<>();
 
@@ -23,7 +23,7 @@ public class BoardState implements Comparable<BoardState> {
   }
 
   BoardState (TileState[][] board) {
-    this(board, TileState.X, 0, 0, 0, "");
+    this(board, null, 0, 0, 0, null);
   }
 
   BoardState (
@@ -78,9 +78,7 @@ public class BoardState implements Comparable<BoardState> {
   }
 
   public BoardState copyBoardWithMove (TileState player, int col, int row) {
-    if (player == TileState.EMPTY) {
-      throw new Error("TileState.EMPTY is not a valid player");
-    } else if (col < 0 || col >= board.length) {
+    if (col < 0 || col >= board.length) {
       throw new Error(String.format("col %s is outside of board", col));
     } else if (row < 0 || row >= board[col].length) {
       throw new Error(String.format("row %s is outside of board", row));
@@ -108,7 +106,7 @@ public class BoardState implements Comparable<BoardState> {
   private boolean terminalTest () {
     int x = this.last_move_x;
     int y = this.last_move_y;
-    TileState player = this.board[x][y];
+    TileState player = this.last_player;
 
     // Move all the way to the left
     int i = x;
@@ -140,19 +138,27 @@ public class BoardState implements Comparable<BoardState> {
   }
 
   private int heuristic () {
-    TileState player = this.last_player == TileState.X ? TileState.O : TileState.X;
+    // TileState player = this.last_player == TileState.X ? TileState.O : TileState.X;
+    TileState player = this.last_player;
     int score = 0;
 
     if (this.terminal_state) {
-      return -100000;
+      score = 2000000;
+      // AI.outl("FOUND IT!");
+      // AI.outl(this.toString());
+      return player == TileState.X ? score : -score;
     }
 
     final Pattern[] foundPatterns = this.findPatterns(player, AI.patterns);
     for (Pattern p : foundPatterns) {
+      // AI.outl(" v  v  v  v  v  v  v ");
+      // AI.outl(p.toString());
+      // AI.outl(p.value + "");
+      // AI.outl(" ^  ^  ^  ^  ^  ^  ^ ");
       score += p.value;
     }
 
-    return score;
+    return player == TileState.X ? score : -score;
   }
 
   Pattern[] findPatterns (TileState player, Pattern[] patterns) {
@@ -225,7 +231,7 @@ public class BoardState implements Comparable<BoardState> {
     for (int i = 1; i <= board[0].length; i++) {
       out += ANSIColors.BLUE + i + " ";
     }
-    out += "\n";
+    out += ANSIColors.RESET + "\n";
 
     for (int i = 0; i < board.length; i++) {
       // print row leader
@@ -252,6 +258,6 @@ public class BoardState implements Comparable<BoardState> {
 
   @Override
   public int compareTo(BoardState state) {
-    return this.heuristic_value - state.heuristic_value;
+    return state.heuristic_value - this.heuristic_value;
   }
 }

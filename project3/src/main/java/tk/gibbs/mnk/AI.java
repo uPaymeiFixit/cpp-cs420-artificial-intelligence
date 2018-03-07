@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class AI {
   final private double MAX_TIME;
+  final private boolean first_play;
+
   static public long start_time;
   private BoardState highest;
   private int current_depth = 0;
@@ -12,8 +14,14 @@ public class AI {
   // TODO: update values
   public static Pattern[] patterns;
 
-  public AI (double max_time) {
+  public AI (double max_time, boolean first_play) {
     this.MAX_TIME = max_time;
+    this.first_play = first_play;
+
+    // ThreadSearch thread_search1 = new ThreadSearch();
+    // ThreadSearch thread_search2 = new ThreadSearch();
+    // ThreadSearch thread_search3 = new ThreadSearch();
+    // ThreadSearch thread_search4 = new ThreadSearch();
 
     if (patterns == null) {
       final Pattern[] unrotatedPatterns = new Pattern[]{
@@ -76,16 +84,17 @@ public class AI {
             new BoardTile(-1, 0, AbstractTileState.OPPONENT),
           }, 1000
         ),
+        // THIS IS ALREADY COVERED BY CHECKING TERMINAL STATE
         // 4 in a row
         // ✕ ✕ ✕ ✕
-        new Pattern(
-          new BoardTile[]{
-            new BoardTile(0, 0, AbstractTileState.PLAYER),
-            new BoardTile(1, 0, AbstractTileState.PLAYER),
-            new BoardTile(2, 0, AbstractTileState.PLAYER),
-            new BoardTile(3, 0, AbstractTileState.PLAYER),
-          }, 1000000
-        ),
+        // new Pattern(
+        //   new BoardTile[]{
+        //     new BoardTile(0, 0, AbstractTileState.PLAYER),
+        //     new BoardTile(1, 0, AbstractTileState.PLAYER),
+        //     new BoardTile(2, 0, AbstractTileState.PLAYER),
+        //     new BoardTile(3, 0, AbstractTileState.PLAYER),
+        //   }, 1000000
+        // ),
       };
 
       ArrayList<Pattern> rotatedPatterns = new ArrayList<>();
@@ -105,56 +114,55 @@ public class AI {
   public BoardState move (BoardState state) {
     this.current_depth = state.depth;
     start_time = System.nanoTime();
-    BoardState next_state = alphaBetaSearch(state);
-    return next_state;
+    // return alphaBetaSearch(state);
+    if (state.depth > 1) {
+      successors_exhaustive(state);
+    } else {
+      successors(state);
+    }
+    return state.children.poll();
   }
 
   private BoardState alphaBetaSearch (BoardState state) {
-    // successors_exhaustive(state);
-    // outl("Heuristic value: " + state.children.peek().heuristic_value);
-    // return state.children.poll();
     int v = maxValue(state, Integer.MIN_VALUE, Integer.MAX_VALUE);
-    // out("maxValue returned " + v + "\n");
-    // "return the action in successors(state) with value v"
     return this.highest;
   }
 
   private int maxValue (BoardState state, int alpha, int beta) {
-    if (terminalTest(state)) {
+    if (cutoffTest(state)) {
       return state.heuristic_value;
     }
     int v = Integer.MIN_VALUE;
-    BoardState w = state;
+    BoardState s = state.children.peek();
     successors(state);
     // Only look at the top 25% of boards
     int size = state.children.size() / 4;
     while (state.children.size() > size) {
-    // for (BoardState s : state.children) {
-      BoardState s = state.children.poll();
+      s = state.children.poll();
       // printDepth(state);
       // outl(s.heuristic_value + "");
-      w = s;
       v = Math.max(v, minValue(s, alpha, beta));
       if (v >= beta) {
-        this.highest = w;
+        this.highest = s;
         return v;
       }
       alpha = Math.max(alpha, v);
     }
-    this.highest = w;
+    this.highest = s;
     return v;
   }
 
   private int minValue (BoardState state, int alpha, int beta) {
-    if (terminalTest(state)) {
+    if (cutoffTest(state)) {
       return state.heuristic_value;
     }
     int v = Integer.MAX_VALUE;
+    BoardState s = state.children.peek();
     successors(state);
+    // Only look at the top 25% of boards
     int size = state.children.size() / 4;
     while (state.children.size() > size) {
-    // for (BoardState s : successors(state)) {
-      BoardState s = state.children.poll();
+      s = state.children.poll();
       v = Math.min(v, maxValue(s, alpha, beta));
       if (v <= alpha) {
         return v;
@@ -165,7 +173,7 @@ public class AI {
   }
 
   // Generate array of all possible next moves
-  private BoardState[] successors_exhaustive (BoardState state) {
+  public static BoardState[] successors_exhaustive (BoardState state) {
     TileState next_player = state.last_player;
     next_player = next_player == TileState.X ? TileState.O : TileState.X;
 
@@ -180,7 +188,7 @@ public class AI {
     return states.toArray(new BoardState[states.size()]);
   }
 
-  private BoardState[] successors (BoardState state) {
+  public static BoardState[] successors (BoardState state) {
     TileState next_player = state.last_player;
     next_player = next_player == TileState.X ? TileState.O : TileState.X;
 
@@ -221,6 +229,9 @@ public class AI {
 
   // Return whether or not we've run out of time or passed 4 layers
   private boolean cutoffTest (BoardState state) {
+    if (state.terminal_state) {
+      return true;
+    }
     if (System.nanoTime() - start_time >= this.MAX_TIME) {
       return true;
     }
@@ -228,11 +239,6 @@ public class AI {
       return true;
     }
     return false;
-  }
-
-  // Return whether or not this is a winning board (or cutoff point is reached)
-  private boolean terminalTest (BoardState state) {
-    return cutoffTest(state) || state.terminal_state;
   }
 
 

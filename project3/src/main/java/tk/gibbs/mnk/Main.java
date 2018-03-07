@@ -10,6 +10,26 @@ public class Main {
 
   public static void main (String[] args) {
     menu();
+
+    new AI(10 * 1E9 - 3E6, first_play);
+
+    TileState X = TileState.X;
+    TileState O = TileState.O;
+    TileState i = TileState.EMPTY;
+    TileState[][] board = new TileState[][] {
+      {i, i, i, i, i, i, i, i},
+      {i, i, i, i, i, i, i, i},
+      {i, i, i, i, i, i, i, i},
+      {i, i, i, i, i, i, i, i},
+      {i, i, i, i, i, i, i, i},
+      {i, i, i, i, i, i, i, i},
+      {i, i, i, i, i, i, i, i},
+      {i, i, i, i, i, i, i, i}
+    };
+
+    BoardState state = new BoardState(board, X, 3, 3, 5, "");
+    AI.outl(state.heuristic_value + "");
+
   }
 
   public static void menu () {
@@ -17,7 +37,7 @@ public class Main {
     first_play = askFirstPlayer();
     BoardState state = new BoardState();
     printMove(state);
-    AI ai = new AI(max_time);
+    AI ai = new AI(max_time, first_play);
 
     if (first_play) {
       state = state.copyBoardWithMove(TileState.X, 4, 4);
@@ -25,6 +45,7 @@ public class Main {
     }
 
     while (!state.terminal_state && state.depth != 64) {
+      AI.outl(BoardState.visited_states.size() + "");
       state = askMove(state);
       printMove(state);
       if (state.terminal_state || state.depth == 64) {
@@ -33,6 +54,7 @@ public class Main {
       System.out.print('\n' + ANSIColors.WHITE + "Thinking...");
       state = ai.move(state);
       System.out.println("Done (" + (System.nanoTime() - AI.start_time) / 1E9 + " seconds)" + ANSIColors.RESET);
+      AI.start_time = 0;
       printMove(state);
     }
     
