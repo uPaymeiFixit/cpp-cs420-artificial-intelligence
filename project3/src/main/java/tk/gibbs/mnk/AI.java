@@ -45,7 +45,7 @@ public class AI {
             new BoardTile(2, 0, AbstractTileState.PLAYER),
             new BoardTile(-1, 0),
             new BoardTile(3, 0),
-          }, 1000
+          }, 5000
         ),
         // single bounded 3 in a row
         new Pattern(
@@ -55,7 +55,7 @@ public class AI {
             new BoardTile(2, 0, AbstractTileState.PLAYER),
             new BoardTile(3, 0),
             new BoardTile(-1, 0, AbstractTileState.OPPONENT),
-          }, 10
+          }, 20
         ),
         // 4 in a row
         new Pattern(
@@ -64,7 +64,7 @@ public class AI {
             new BoardTile(1, 0, AbstractTileState.PLAYER),
             new BoardTile(2, 0, AbstractTileState.PLAYER),
             new BoardTile(3, 0, AbstractTileState.PLAYER),
-          }, Integer.MAX_VALUE
+          }, 1000000
         ),
       };
 
