@@ -148,11 +148,6 @@ public class BoardState implements Comparable<BoardState> {
     TileState player = this.last_player == TileState.X ? TileState.O : TileState.X;
     int score = 0;
 
-    // If we won, give this the highest possible value
-    if (this.terminal_state) {
-      return -100000;
-    }
-
     final Pattern[] foundPatterns = this.findPatterns(player, AI.patterns);
     for (Pattern p : foundPatterns) {
       score += p.value;
