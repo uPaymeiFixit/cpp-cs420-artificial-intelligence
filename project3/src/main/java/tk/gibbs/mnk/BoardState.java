@@ -127,7 +127,14 @@ public class BoardState {
       for (Pattern pattern : patterns) {
         boolean match = true;
         for (int i = 0; i < pattern.points.length; i++) {
-          final TileState tile = this.board[centerStone.x + pattern.points[i].x][centerStone.y + pattern.points[i].y];
+          TileState tile;
+          try {
+            tile = this.board[centerStone.x + pattern.points[i].x][centerStone.y + pattern.points[i].y];
+          } catch (ArrayIndexOutOfBoundsException error) {
+            match = false;
+            break;
+          }
+
           if (tile == player && pattern.points[i].state == AbstractTileState.PLAYER) {
             continue;
           } else if (tile == TileState.EMPTY && pattern.points[i].state == AbstractTileState.EMPTY) {
