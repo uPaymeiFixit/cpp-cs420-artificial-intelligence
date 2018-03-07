@@ -39,13 +39,15 @@ public class Main {
   public static void printMove (BoardState state) {
     String board_string = state.toString();
 
+    // If nobody has played, add header to moves
     if (state.depth == 0) {
       if (first_play) {
-        moves.add("Player vs. Opponent");
+        moves.add("  Player vs. Opponent");
       } else {
         moves.add("Opponent vs. Player");
       }
     } else {
+      // If we're currently playing, get the last move and last player
       String last_move = (char)(state.last_move_x + 'a') + "" + (state.last_move_y + 1);
       if (first_play) {
         if (state.last_player == TileState.X) {
@@ -60,30 +62,36 @@ public class Main {
           moves.get(moves.size() - 1).concat(" " + last_move);
         }
       }
-      String last_player = state.last_player == TileState.X ? "Player" : "Opponent";
-      board_string += "                 \n" + last_player + "'s move is: " + last_move;
+      String last_player = state.last_player == TileState.X ? "  Player" : "Opponent";
+      board_string += "                  \n" + last_player + "'s move is: " + last_move;
     }
 
     String[] board = board_string.split("\n");
-
     System.out.println();
+
+    // If moves column is shorter than board
     if (moves.size() < board.length) {
+      // Output all of the moves
       for (int i = 0; i < moves.size(); i++) {
-        System.out.println(board[i] + "    " + moves.get(i));
+        System.out.println(board[i] + "   " + moves.get(i));
       }
+      // Then finish off the board
       for (int i = moves.size(); i < board.length; i++) {
         System.out.println(board[i]);
       }
     } else {
+      // If the moves column is longer than the board
+      // Print entire board
       for (int i = 0; i < board.length; i++) {
-        if (i == 8) {
+        if (i == 10) {
           System.out.println(board[i] + moves.get(i));
         } else {
-          System.out.println(board[i] + "    " + moves.get(i));
+          System.out.println(board[i] + " " + moves.get(i));
         }
       }
+      // Then finish printing the moves
       for (int i = board.length; i < moves.size(); i++) {
-        System.out.println("                      " + moves.get(i));
+        System.out.println("                    " + moves.get(i));
       }
     }
 
