@@ -27,10 +27,10 @@ public class Main {
       printMove(state);
     }
 
-    while (!state.terminal_state) {
+    while (!state.terminal_state && state.depth != 64) {
       state = askMove(state);
       printMove(state);
-      if (state.terminal_state) {
+      if (state.terminal_state || state.depth == 64) {
         break;
       }
       System.out.print('\n' + ANSIColors.WHITE + "Thinking...");
@@ -72,6 +72,9 @@ public class Main {
       if (state.terminal_state) {
         String color = state.last_player == TileState.X ? ANSIColors.GREEN_BOLD_BRIGHT : ANSIColors.RED_BOLD_BRIGHT;
         board_string += "                  \n" + color + last_player.toUpperCase() + " WINS!" + ANSIColors.RESET;
+      } else if (state.depth == 64) {
+        String color = ANSIColors.CYAN_BOLD_BRIGHT;
+        board_string += "                  \n" + color + "DRAW!" + ANSIColors.RESET;
       }
     }
 
