@@ -88,12 +88,11 @@ public class AI {
     int v = Integer.MIN_VALUE;
     BoardState w = state;
     successors(state);
-    while (state.children.size() != 0) {
+    // Only look at the top 25% of boards
+    int size = state.children.size() / 4;
+    while (state.children.size() > size) {
     // for (BoardState s : state.children) {
       BoardState s = state.children.poll();
-      if (s.heuristic_value == Integer.MAX_VALUE) {
-        outl(s.toString());
-      }
       // printDepth(state);
       // outl(s.heuristic_value + "");
       w = s;
@@ -113,7 +112,11 @@ public class AI {
       return state.heuristic_value;
     }
     int v = Integer.MAX_VALUE;
-    for (BoardState s : successors(state)) {
+    successors(state);
+    int size = state.children.size() / 4;
+    while (state.children.size() > size) {
+    // for (BoardState s : successors(state)) {
+      BoardState s = state.children.poll();
       v = Math.min(v, maxValue(s, alpha, beta));
       if (v <= alpha) {
         return v;
@@ -183,7 +186,7 @@ public class AI {
     if (System.nanoTime() - start_time >= this.MAX_TIME) {
       return true;
     }
-    if (state.depth - this.current_depth > 7) {
+    if (state.depth - this.current_depth > 10) {
       return true;
     }
     return false;
