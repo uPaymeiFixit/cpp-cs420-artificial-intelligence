@@ -21,17 +21,17 @@ public class AI {
         new BoardTile(1, 0, AbstractTileState.PLAYER),
         new BoardTile(-1, 0),
         new BoardTile(2, 0),
-      }, 10
+      }, 20
     ),
     // unbounded 1 and 1 in a row
     new Pattern(
       new BoardTile[]{
         new BoardTile(0, 0, AbstractTileState.PLAYER),
-        new BoardTile(1, 0, AbstractTileState.PLAYER),
+        new BoardTile(2, 0, AbstractTileState.PLAYER),
         new BoardTile(-1, 0),
-        new BoardTile(2, 0),
+        new BoardTile(1, 0),
         new BoardTile(3, 0),
-      }, 10
+      }, 20
     ),
     // unbounded 3 in a row
     new Pattern(
@@ -40,8 +40,8 @@ public class AI {
         new BoardTile(1, 0, AbstractTileState.PLAYER),
         new BoardTile(2, 0, AbstractTileState.PLAYER),
         new BoardTile(-1, 0),
-        new BoardTile(2, 0),
-      }, 10
+        new BoardTile(3, 0),
+      }, 1000
     ),
     // single bounded 3 in a row
     new Pattern(
@@ -66,6 +66,10 @@ public class AI {
 
   public AI (double max_time) {
     this.MAX_TIME = max_time;
+
+    for (Pattern pattern : patterns) {
+      System.out.println(pattern);
+    }
   }
 
   // Return the best move given the state
