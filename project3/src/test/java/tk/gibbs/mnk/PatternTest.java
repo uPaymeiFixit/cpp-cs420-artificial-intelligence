@@ -10,23 +10,23 @@ public class PatternTest {
   @Test public void testPatternRotation () {
     Pattern unbounded = new Pattern(
       new BoardTile[]{
-        new BoardTile(0, 0, TileState.X),
-        new BoardTile(1, 0, TileState.X),
+        new BoardTile(0, 0, AbstractTileState.PLAYER),
+        new BoardTile(1, 0, AbstractTileState.PLAYER),
         new BoardTile(-1, 0),
         new BoardTile(2, 0),
       }, 10
     );
 
     BoardTile[] unboundedRotate90 = new BoardTile[]{
-      new BoardTile(0, 0, TileState.X),
-      new BoardTile(0, -1, TileState.X),
+      new BoardTile(0, 0, AbstractTileState.PLAYER),
+      new BoardTile(0, -1, AbstractTileState.PLAYER),
       new BoardTile(0, 1),
       new BoardTile(0, -2),
     };
 
     BoardTile[] unboundedRotate180 = new BoardTile[]{
-      new BoardTile(0, 0, TileState.X),
-      new BoardTile(-1, 0, TileState.X),
+      new BoardTile(0, 0, AbstractTileState.PLAYER),
+      new BoardTile(-1, 0, AbstractTileState.PLAYER),
       new BoardTile(1, 0),
       new BoardTile(-2, 0),
     };
