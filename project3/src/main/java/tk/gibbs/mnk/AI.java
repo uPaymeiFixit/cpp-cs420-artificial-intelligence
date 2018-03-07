@@ -3,7 +3,6 @@ package tk.gibbs.mnk;
 import java.util.ArrayList;
 
 public class AI {
-
   final private double MAX_TIME;
   static public long start_time;
   private BoardState highest;
@@ -80,6 +79,7 @@ public class AI {
 
   private BoardState alphaBetaSearch (BoardState state) {
     int v = maxValue(state, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    // out(state.children.peek().toString());
     // out("maxValue returned " + v + "\n");
     // "return the action in successors(state) with value v"
     return this.highest;

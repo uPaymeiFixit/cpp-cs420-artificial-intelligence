@@ -7,18 +7,13 @@ public class BoardState implements Comparable<BoardState> {
   final public TileState[][] board;
   final public String hash;
   final public int heuristic_value;
-  final TileState last_player;
+  final public TileState last_player;
   final public int last_move_x;
   final public int last_move_y;
   final public int depth;
   final public boolean terminal_state;
-  final static public  PriorityQueue<BoardState> visited_states = new PriorityQueue<>();
-
-  // TileState[][] getBoard () { return board; }
-  // String getHash () { return hash; }
-  // int getHeuristicVal () { return heuristicVal; }
-  // int getLastMoveX () { return last_move_x; }
-  // int getLastMoveY () { return last_move_y; }
+  final public PriorityQueue<BoardState> children = new PriorityQueue<>();
+  final static public PriorityQueue<BoardState> visited_states = new PriorityQueue<>();
 
   BoardState () {
     // Initilaize with empty board
@@ -44,7 +39,7 @@ public class BoardState implements Comparable<BoardState> {
     BoardState.visited_states.offer(this);
   }
 
-  static TileState[][] generateEmptyBoard () {
+  private static TileState[][] generateEmptyBoard () {
     TileState[][] board = new TileState[8][8];
     for (int i = 0; i < board.length; i++) {
       for (int n = 0; n < board[i].length; n++) {
@@ -54,7 +49,7 @@ public class BoardState implements Comparable<BoardState> {
     return board;
   }
 
-  BoardState copyBoardWithMove (TileState player, int col, int row) {
+  public BoardState copyBoardWithMove (TileState player, int col, int row) {
     if (player == TileState.EMPTY) {
       throw new Error("TileState.EMPTY is not a valid player");
     } else if (col < 0 || col >= board.length) {
@@ -65,18 +60,19 @@ public class BoardState implements Comparable<BoardState> {
       throw new Error("Somebody is already occupying that spot.");
     }
 
-    TileState[][] updatedBoard = new TileState[this.board.length][];
+    TileState[][] updated_board = new TileState[this.board.length][];
     for (int i = 0; i < this.board.length; i++) {
-      updatedBoard[i] = this.board[i].clone();
+      updated_board[i] = this.board[i].clone();
     }
 
-    updatedBoard[col][row] = player;
-
-    return new BoardState(updatedBoard, player, col, row, this.depth + 1);
+    updated_board[col][row] = player;
+    BoardState new_board = new BoardState(updated_board, player, col, row, this.depth + 1);
+    this.children.offer(new_board);
+    return new_board;
   }
 
   // Return whether or not this is a winning board
-  public boolean terminalTest () {
+  private boolean terminalTest () {
     int x = this.last_move_x;
     int y = this.last_move_y;
     TileState player = this.board[x][y];
