@@ -152,43 +152,19 @@ public class BoardState implements Comparable<BoardState> {
     if (this.terminal_state) {
       return -100000;
     }
-    
-    // Add 2 if 2 in a row, subtract 1 if they have two in a row
-    for (int i = 1; i < this.board.length; i++) {
-      for (int j = 1; j < this.board[i].length; j++) {
-        if (this.board[i][j] == this.board[i - 1][j] ||
-            this.board[i][j] == this.board[i][j - 1]) {
-          if (this.board[i][j] == player) {
-            score += 2;
-          } else {
-            score--;
-          }
-        }
-      }
-    }
 
-    // Give [ ][x][x][ ] pattern 500 points
-    for (int i = 0; i < this.board.length - 3; i++) {
-      for (int j = 0; j < this.board[i].length - 3; j++) {
-        if (this.board[i][j] == TileState.EMPTY &&
-            this.board[i + 1][j] == player &&
-            this.board[i + 2][j] == player &&
-            this.board[i + 3][j] == TileState.EMPTY) {
-          score += 500;
-        }
-        if (this.board[i][j] == TileState.EMPTY &&
-            this.board[i][j + 1] == player &&
-            this.board[i][j + 2] == player &&
-            this.board[i][j + 3] == TileState.EMPTY) {
-          score += 500;
-        }
-      }
+    final Pattern[] foundPatterns = this.findPatterns(player, AI.patterns);
+    for (Pattern p : foundPatterns) {
+      score += p.value;
     }
 
     return score;
   }
 
   Pattern[] findPatterns (TileState player, Pattern[] patterns) {
+    // System.out.println("Testing board:");
+    // System.out.println(this);
+
     LinkedList<BoardTile> playerStones = new LinkedList<>();
     LinkedList<BoardTile> opponentStones = new LinkedList<>();
 
@@ -208,7 +184,14 @@ public class BoardState implements Comparable<BoardState> {
       for (Pattern pattern : patterns) {
         boolean match = true;
         for (int i = 0; i < pattern.points.length; i++) {
-          final TileState tile = this.board[centerStone.x + pattern.points[i].x][centerStone.y + pattern.points[i].y];
+          TileState tile;
+          try {
+            tile = this.board[centerStone.x + pattern.points[i].x][centerStone.y + pattern.points[i].y];
+          } catch (ArrayIndexOutOfBoundsException error) {
+            match = false;
+            break;
+          }
+
           if (tile == player && pattern.points[i].state == AbstractTileState.PLAYER) {
             continue;
           } else if (tile == TileState.EMPTY && pattern.points[i].state == AbstractTileState.EMPTY) {
@@ -221,9 +204,20 @@ public class BoardState implements Comparable<BoardState> {
           }
         }
         if (match) {
+          System.out.println("Matched pattern:");
+          System.out.println(this);
+          System.out.println(pattern);
           foundPatterns.add(pattern);
         }
       }
+    }
+
+    int score = 0;
+    for (Pattern p : foundPatterns) {
+      score += p.value;
+    }
+    if (score > 0) {
+      System.out.println(String.format("Score: %s", score));
     }
 
     return foundPatterns.toArray(new Pattern[0]);
@@ -235,28 +229,28 @@ public class BoardState implements Comparable<BoardState> {
 
     // print column headers
     for (int i = 1; i <= board[0].length; i++) {
-      out += ANSIColors.BLUE + i + ANSIColors.RESET + " ";
+      out += ANSIColors.BLUE + i + " ";
     }
     out += "\n";
 
     for (int i = 0; i < board.length; i++) {
       // print row leader
-      out += ANSIColors.PURPLE + (char)(65 + i) + ANSIColors.RESET + " ";
+      out += ANSIColors.PURPLE + (char)(65 + i) + " ";
 
       for (int n = 0; n < board[i].length; n++) {
         switch (board[i][n]) {
           case X:
-            out += String.format("%s✕%s ", ANSIColors.GREEN, ANSIColors.RESET);
+            out += String.format("%s✕ ", ANSIColors.GREEN);
             break;
           case O:
-            out += String.format("%s◯%s ", ANSIColors.RED, ANSIColors.RESET);
+            out += String.format("%s◯ ", ANSIColors.RED);
             break;
           case EMPTY:
-            out += String.format("%s∙%s ", ANSIColors.BLACK_BRIGHT, ANSIColors.RESET);
+            out += String.format("%s∙ ", ANSIColors.BLACK_BRIGHT);
             break;
         }
       }
-      out += "\n";
+      out += ANSIColors.RESET + "\n";
     }
 
     return out;

@@ -10,59 +10,83 @@ public class AI {
 
   // TODO: make sure there aren't any more patterns we care about
   // TODO: update values
-  private static final Pattern[] patterns = new Pattern[]{
-    // unbounded 2 in a row
-    new Pattern(
-      new BoardTile[]{
-        new BoardTile(0, 0, AbstractTileState.PLAYER),
-        new BoardTile(1, 0, AbstractTileState.PLAYER),
-        new BoardTile(-1, 0),
-        new BoardTile(2, 0),
-      }, 20
-    ),
-    // unbounded 1 and 1 in a row
-    new Pattern(
-      new BoardTile[]{
-        new BoardTile(0, 0, AbstractTileState.PLAYER),
-        new BoardTile(2, 0, AbstractTileState.PLAYER),
-        new BoardTile(-1, 0),
-        new BoardTile(1, 0),
-        new BoardTile(3, 0),
-      }, 20
-    ),
-    // unbounded 3 in a row
-    new Pattern(
-      new BoardTile[]{
-        new BoardTile(0, 0, AbstractTileState.PLAYER),
-        new BoardTile(1, 0, AbstractTileState.PLAYER),
-        new BoardTile(2, 0, AbstractTileState.PLAYER),
-        new BoardTile(-1, 0),
-        new BoardTile(3, 0),
-      }, 1000
-    ),
-    // single bounded 3 in a row
-    new Pattern(
-      new BoardTile[]{
-        new BoardTile(0, 0, AbstractTileState.PLAYER),
-        new BoardTile(1, 0, AbstractTileState.PLAYER),
-        new BoardTile(2, 0, AbstractTileState.PLAYER),
-        new BoardTile(3, 0),
-        new BoardTile(-1, 0, AbstractTileState.OPPONENT),
-      }, 10
-    ),
-    // 4 in a row
-    new Pattern(
-      new BoardTile[]{
-        new BoardTile(0, 0, AbstractTileState.PLAYER),
-        new BoardTile(1, 0, AbstractTileState.PLAYER),
-        new BoardTile(2, 0, AbstractTileState.PLAYER),
-        new BoardTile(3, 0, AbstractTileState.PLAYER),
-      }, Integer.MAX_VALUE
-    ),
-  };
+  public static Pattern[] patterns;
 
   public AI (double max_time) {
     this.MAX_TIME = max_time;
+
+    if (patterns == null) {
+      final Pattern[] unrotatedPatterns = new Pattern[]{
+        // unbounded 2 in a row
+        new Pattern(
+          new BoardTile[]{
+            new BoardTile(0, 0, AbstractTileState.PLAYER),
+            new BoardTile(1, 0, AbstractTileState.PLAYER),
+            new BoardTile(-1, 0),
+            new BoardTile(2, 0),
+          }, 100
+        ),
+        // unbounded 1 and 1 in a row
+        new Pattern(
+          new BoardTile[]{
+            new BoardTile(0, 0, AbstractTileState.PLAYER),
+            new BoardTile(2, 0, AbstractTileState.PLAYER),
+            new BoardTile(-1, 0),
+            new BoardTile(1, 0),
+            new BoardTile(3, 0),
+          }, 100
+        ),
+        // 2 L unbounded 2 in a row
+        new Pattern(
+          new BoardTile[]{
+            new BoardTile(0, 0, AbstractTileState.PLAYER),
+            new BoardTile(1, 0, AbstractTileState.PLAYER),
+            new BoardTile(0, 1, AbstractTileState.PLAYER),
+            new BoardTile(-1, 0),
+            new BoardTile(0, -1),
+            new BoardTile(2, 0),
+            new BoardTile(0, 2),
+          }, 500
+        ),
+        // unbounded 3 in a row
+        new Pattern(
+          new BoardTile[]{
+            new BoardTile(0, 0, AbstractTileState.PLAYER),
+            new BoardTile(1, 0, AbstractTileState.PLAYER),
+            new BoardTile(2, 0, AbstractTileState.PLAYER),
+            new BoardTile(-1, 0),
+            new BoardTile(3, 0),
+          }, 5000
+        ),
+        // single bounded 3 in a row
+        new Pattern(
+          new BoardTile[]{
+            new BoardTile(0, 0, AbstractTileState.PLAYER),
+            new BoardTile(1, 0, AbstractTileState.PLAYER),
+            new BoardTile(2, 0, AbstractTileState.PLAYER),
+            new BoardTile(3, 0),
+            new BoardTile(-1, 0, AbstractTileState.OPPONENT),
+          }, 20
+        ),
+        // 4 in a row
+        new Pattern(
+          new BoardTile[]{
+            new BoardTile(0, 0, AbstractTileState.PLAYER),
+            new BoardTile(1, 0, AbstractTileState.PLAYER),
+            new BoardTile(2, 0, AbstractTileState.PLAYER),
+            new BoardTile(3, 0, AbstractTileState.PLAYER),
+          }, 1000000
+        ),
+      };
+
+      ArrayList<Pattern> rotatedPatterns = new ArrayList<>();
+      for (Pattern pattern : unrotatedPatterns) {
+        System.out.println(pattern);
+        rotatedPatterns.add(new Pattern(pattern.rotate(), pattern.value));
+      }
+      patterns = rotatedPatterns.toArray(new Pattern[0]);
+    }
+
   }
 
   // Return the best move given the state

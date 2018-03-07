@@ -29,7 +29,7 @@
       "name": "Debug (Launch)-Main<project3>",
       "request": "launch",
       "cwd": "${workspaceFolder}",
-      "console": "internalConsole",
+      "console": "integratedTerminal",
       "stopOnEntry": false,
       "mainClass": "tk.gibbs.mnk.Main",
       "projectName": "project3",
