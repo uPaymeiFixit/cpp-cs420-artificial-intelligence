@@ -115,6 +115,34 @@ public class AI {
     this.current_depth = state.depth;
     start_time = System.nanoTime();
     // return alphaBetaSearch(state);
+    // return dumbSearch(state);
+    return twoSearch(state);
+  }
+
+  private BoardState twoSearch (BoardState state) {
+    double first_plie_weight = 0.75;
+    successors_exhaustive(state);
+    double best_heuristic = 0;
+    BoardState best_board = state.children.peek();
+    for (BoardState s : state.children) {
+      successors_exhaustive(s);
+      // Get the average of s's children
+      double sum = 0;
+      for (BoardState t : s.children) {
+        sum += t.heuristic_value;
+      }
+      sum /= s.children.size();
+      // Take weighted average 75% 2nd level + 25% 1st level
+      sum = first_plie_weight * sum + s.heuristic_value * (1 - first_plie_weight);
+      if (sum > best_heuristic) {
+        best_heuristic = sum;
+        best_board = s;
+      }
+    }
+    return best_board;
+  }
+
+  private BoardState dumbSearch (BoardState state) {
     if (state.depth > 1) {
       successors_exhaustive(state);
     } else {
