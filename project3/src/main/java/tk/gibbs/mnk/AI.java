@@ -208,45 +208,13 @@ public class AI {
     return cutoffTest(state) || state.terminal_state;
   }
 
-  // Temporary heuristic: Count how many 2 in a row / column there are
   private int utility (TileState player, BoardState state) {
+    System.out.println("Utility");
     int score = 0;
 
-    // If we won, give this the highest possible value
-    if (state.terminal_state) {
-      return Integer.MAX_VALUE;
-    }
-    
-    // Add 2 if 2 in a row, subtract 1 if they have two in a row
-    for (int i = 1; i < state.board.length; i++) {
-      for (int j = 1; j < state.board[i].length; j++) {
-        if (state.board[i][j] == state.board[i - 1][j] ||
-            state.board[i][j] == state.board[i][j - 1]) {
-          if (state.board[i][j] == player) {
-            score += 2;
-          } else {
-            score--;
-          }
-        }
-      }
-    }
-
-    // Give [ ][x][x][ ] pattern 500 points
-    for (int i = 0; i < state.board.length - 3; i++) {
-      for (int j = 0; j < state.board[i].length - 3; j++) {
-        if (state.board[i][j] == TileState.EMPTY &&
-            state.board[i + 1][j] == player &&
-            state.board[i + 2][j] == player &&
-            state.board[i + 3][j] == TileState.EMPTY) {
-          score += 500;
-        }
-        if (state.board[i][j] == TileState.EMPTY &&
-            state.board[i][j + 1] == player &&
-            state.board[i][j + 2] == player &&
-            state.board[i][j + 3] == TileState.EMPTY) {
-          score += 500;
-        }
-      }
+    final Pattern[] foundPatterns = state.findPatterns(player, patterns);
+    for (Pattern p : foundPatterns) {
+      score += p.value;
     }
 
     return score;
