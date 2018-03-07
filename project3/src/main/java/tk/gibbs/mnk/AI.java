@@ -229,7 +229,6 @@ public class AI {
   }
 
   private int utility (TileState player, BoardState state) {
-    System.out.println("Utility");
     int score = 0;
 
     final Pattern[] foundPatterns = state.findPatterns(player, patterns);

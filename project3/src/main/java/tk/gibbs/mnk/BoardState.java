@@ -108,6 +108,9 @@ public class BoardState {
   }
 
   Pattern[] findPatterns (TileState player, Pattern[] patterns) {
+    // System.out.println("Testing board:");
+    // System.out.println(this);
+
     LinkedList<BoardTile> playerStones = new LinkedList<>();
     LinkedList<BoardTile> opponentStones = new LinkedList<>();
 
@@ -147,9 +150,20 @@ public class BoardState {
           }
         }
         if (match) {
+          System.out.println("Matched pattern:");
+          System.out.println(this);
+          System.out.println(pattern);
           foundPatterns.add(pattern);
         }
       }
+    }
+
+    int score = 0;
+    for (Pattern p : foundPatterns) {
+      score += p.value;
+    }
+    if (score > 0) {
+      System.out.println(String.format("Score: %s", score));
     }
 
     return foundPatterns.toArray(new Pattern[0]);
