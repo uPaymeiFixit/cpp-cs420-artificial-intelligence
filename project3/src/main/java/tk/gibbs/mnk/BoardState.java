@@ -66,6 +66,10 @@ public class BoardState {
     return new BoardState(updatedBoard, player, col, row, this.depth + 1);
   }
 
+  Pattern[] findPatterns (TileState player) {
+    return null;
+  }
+
   @Override
   public String toString () {
     String out = "  ";
