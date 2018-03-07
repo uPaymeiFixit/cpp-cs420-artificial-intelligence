@@ -18,6 +18,7 @@ public class AI {
     if (patterns == null) {
       final Pattern[] unrotatedPatterns = new Pattern[]{
         // unbounded 2 in a row
+        // ∙ ✕ ✕ ∙
         new Pattern(
           new BoardTile[]{
             new BoardTile(0, 0, AbstractTileState.PLAYER),
@@ -27,6 +28,7 @@ public class AI {
           }, 100
         ),
         // unbounded 1 and 1 in a row
+        // ∙ ✕ ∙ ✕ ∙
         new Pattern(
           new BoardTile[]{
             new BoardTile(0, 0, AbstractTileState.PLAYER),
@@ -37,6 +39,10 @@ public class AI {
           }, 100
         ),
         // 2 L unbounded 2 in a row
+        //   ∙
+        //   ✕
+        // ∙ ✕ ✕ ∙
+        //   ∙
         new Pattern(
           new BoardTile[]{
             new BoardTile(0, 0, AbstractTileState.PLAYER),
@@ -49,6 +55,7 @@ public class AI {
           }, 500
         ),
         // unbounded 3 in a row
+        // ∙ ✕ ✕ ✕ ∙
         new Pattern(
           new BoardTile[]{
             new BoardTile(0, 0, AbstractTileState.PLAYER),
@@ -59,6 +66,7 @@ public class AI {
           }, 5000
         ),
         // single bounded 3 in a row
+        // ∙ ✕ ✕ ✕
         new Pattern(
           new BoardTile[]{
             new BoardTile(0, 0, AbstractTileState.PLAYER),
@@ -69,6 +77,7 @@ public class AI {
           }, 20
         ),
         // 4 in a row
+        // ✕ ✕ ✕ ✕
         new Pattern(
           new BoardTile[]{
             new BoardTile(0, 0, AbstractTileState.PLAYER),
