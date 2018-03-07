@@ -53,13 +53,13 @@ public class Main {
       String last_move = (char)(state.last_move_x + 'a') + "" + (state.last_move_y + 1);
       if (first_play) {
         if (state.last_player == TileState.X) {
-          moves.add(moves.size() + ". " + last_move);
+          moves.add("     " + moves.size() + ". " + last_move);
         } else {
           moves.set(moves.size() - 1, moves.get(moves.size() - 1) + " " + last_move);
         }
       } else {
         if (state.last_player == TileState.O) {
-          moves.add(moves.size() + ". " + last_move);
+          moves.add("     " + moves.size() + ". " + last_move);
         } else {
           moves.set(moves.size() - 1, moves.get(moves.size() - 1) + " " + last_move);
         }
