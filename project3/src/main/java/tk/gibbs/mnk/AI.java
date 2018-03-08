@@ -92,19 +92,29 @@ public class AI {
             new BoardTile(2, 0, AbstractTileState.PLAYER),
             new BoardTile(3, 0),
             new BoardTile(-1, 0, AbstractTileState.OPPONENT),
-          }, 1000
+          }, 5000
+        ),
+        // single bounded 3 in a row
+        // ∙ ✕ ✕ ✕
+        new Pattern(
+          new BoardTile[]{
+            new BoardTile(0, 0, AbstractTileState.PLAYER),
+            new BoardTile(1, 0, AbstractTileState.PLAYER),
+            new BoardTile(2, 0, AbstractTileState.PLAYER),
+            new BoardTile(3, 0),
+          }, 5000
         ),
         // THIS IS ALREADY COVERED BY CHECKING TERMINAL STATE
         // 4 in a row
         // ✕ ✕ ✕ ✕
-        // new Pattern(
-        //   new BoardTile[]{
-        //     new BoardTile(0, 0, AbstractTileState.PLAYER),
-        //     new BoardTile(1, 0, AbstractTileState.PLAYER),
-        //     new BoardTile(2, 0, AbstractTileState.PLAYER),
-        //     new BoardTile(3, 0, AbstractTileState.PLAYER),
-        //   }, 1000000
-        // ),
+        new Pattern(
+          new BoardTile[]{
+            new BoardTile(0, 0, AbstractTileState.PLAYER),
+            new BoardTile(1, 0, AbstractTileState.PLAYER),
+            new BoardTile(2, 0, AbstractTileState.PLAYER),
+            new BoardTile(3, 0, AbstractTileState.PLAYER),
+          }, 1000000
+        ),
       };
 
       ArrayList<Pattern> rotatedPatterns = new ArrayList<>();
