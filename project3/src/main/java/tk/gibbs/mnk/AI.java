@@ -73,6 +73,16 @@ public class AI {
             new BoardTile(3, 0),
           }, 5000
         ),
+        // bounded gap 3
+        // ✕ ✕ ∙ x
+        new Pattern(
+          new BoardTile[]{
+            new BoardTile(0, 0, AbstractTileState.PLAYER),
+            new BoardTile(1, 0, AbstractTileState.PLAYER),
+            new BoardTile(2, 0),
+            new BoardTile(3, 0, AbstractTileState.PLAYER),
+          }, 5000
+        ),
         // single bounded 3 in a row
         // ∙ ✕ ✕ ✕ ◯
         new Pattern(
